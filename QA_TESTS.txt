@@ -1,0 +1,19 @@
+REVIVE TITUS V1 - QA TEST CASES
+
+1. Minimum job
+Front 500, back 0, no upgrades -> Final $1,199
+
+2. Front only above minimum
+Front 1000, back 0, no upgrades -> Final $1,500
+
+3. Front + back with 10% bundle
+Front 1000, back 500, discount 10% -> Base $2,500; discount $250; final $2,250
+
+4. Bundle + joint tone
+Front 1000, back 500, discount 10%, joint tone 1000 -> Base after discount $2,250; upgrades $400; final $2,650
+
+5. Bundle guardrail
+Discount applies only when both front and back are greater than zero.
+
+6. Offline
+Load once online, switch browser context offline, reload -> app still loads and calculates.

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#12181f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TITUS">
+  <meta name="description" content="Revive TITUS field quote calculator and sales reference.">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Revive TITUS</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <img src="revive-logo.png" alt="Revive Paver Restoration" class="brand-mark">
+        <div>
+          <div class="brand-kicker">REVIVE PAVER RESTORATION</div>
+          <div class="brand-title">TITUS <span>Sales System</span></div>
+        </div>
+      </div>
+      <div class="status-wrap">
+        <span id="connectionBadge" class="status-badge">Checking connection...</span>
+        <span class="version">V1.0</span>
+      </div>
+    </header>
+
+    <main>
+      <section id="screen-quote" class="screen active" aria-labelledby="quoteHeading">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">FIELD QUOTE</p>
+            <h1 id="quoteHeading">Build the project price.</h1>
+            <p class="lede">Enter measurements and selected upgrades. TITUS protects the pricing rules and calculates the final selling price automatically.</p>
+          </div>
+          <div class="hero-chip">Restore <span>•</span> Protect <span>•</span> Revive</div>
+        </div>
+
+        <div class="quote-layout">
+          <div class="stack">
+            <section class="panel">
+              <div class="panel-heading">
+                <div><span class="step">01</span><h2>Project measurements</h2></div>
+                <p>Blue fields are the only values the salesperson changes.</p>
+              </div>
+              <div class="field-grid">
+                <label class="field-card">
+                  <span class="field-label">Front driveway / walkway</span>
+                  <span class="field-help">Measured front square footage</span>
+                  <div class="input-wrap"><input id="frontSqft" type="number" inputmode="decimal" min="0" step="1" value="0"><span>sq ft</span></div>
+                  <span class="rate-pill">$1.50 / sq ft</span>
+                </label>
+                <label class="field-card">
+                  <span class="field-label">Lanai / back area</span>
+                  <span class="field-help">Measured lanai or back square footage</span>
+                  <div class="input-wrap"><input id="backSqft" type="number" inputmode="decimal" min="0" step="1" value="0"><span>sq ft</span></div>
+                  <span class="rate-pill">$2.00 / sq ft</span>
+                </label>
+                <label class="field-card">
+                  <span class="field-label">Bundle discount</span>
+                  <span class="field-help">Use only when front + back are both included</span>
+                  <div class="input-wrap select-wrap">
+                    <select id="bundleDiscount" aria-label="Bundle discount">
+                      <option value="0">0%</option>
+                      <option value="0.05">5%</option>
+                      <option value="0.10">10%</option>
+                    </select>
+                  </div>
+                  <span class="rate-pill warning">10% max without approval</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="panel">
+              <div class="panel-heading">
+                <div><span class="step">02</span><h2>Specialty upgrades</h2></div>
+                <p>Leave any upgrade at zero when it does not apply.</p>
+              </div>
+              <div class="upgrade-list">
+                <label class="upgrade-row"><span><b>Joint tone enhancement</b><small>Default +$0.40 / sq ft</small></span><div class="mini-input"><input id="jointToneSqft" type="number" inputmode="decimal" min="0" step="1" value="0"><span>sq ft</span></div></label>
+                <label class="upgrade-row"><span><b>Color revival</b><small>Default +$0.60 / sq ft</small></span><div class="mini-input"><input id="colorRevivalSqft" type="number" inputmode="decimal" min="0" step="1" value="0"><span>sq ft</span></div></label>
+                <label class="upgrade-row"><span><b>Restore bundle</b><small>Default +$0.90 / sq ft</small></span><div class="mini-input"><input id="restoreBundleSqft" type="number" inputmode="decimal" min="0" step="1" value="0"><span>sq ft</span></div></label>
+                <label class="upgrade-row"><span><b>Accent border pop</b><small>Typical $295–$695</small></span><div class="mini-input currency"><span>$</span><input id="accentBorderFlat" type="number" inputmode="decimal" min="0" step="1" value="0"></div></label>
+                <label class="upgrade-row"><span><b>Custom border</b><small>Default $5.50 / linear ft</small></span><div class="mini-input"><input id="customBorderLf" type="number" inputmode="decimal" min="0" step="1" value="0"><span>lf</span></div></label>
+                <label class="upgrade-row"><span><b>Spot blend / problem areas</b><small>Typical $150–$350</small></span><div class="mini-input currency"><span>$</span><input id="spotBlendFlat" type="number" inputmode="decimal" min="0" step="1" value="0"></div></label>
+                <label class="upgrade-row"><span><b>Designer accent finish</b><small>Typical $350–$750</small></span><div class="mini-input currency"><span>$</span><input id="designerAccentFlat" type="number" inputmode="decimal" min="0" step="1" value="0"></div></label>
+                <label class="upgrade-row"><span><b>Full metallic veil</b><small>Typical $750–$1,500</small></span><div class="mini-input currency"><span>$</span><input id="metallicVeilFlat" type="number" inputmode="decimal" min="0" step="1" value="0"></div></label>
+              </div>
+            </section>
+          </div>
+
+          <aside class="price-rail">
+            <section class="total-card">
+              <p class="eyebrow light">FINAL SELLING PRICE</p>
+              <div id="finalPrice" class="final-price">$1,199</div>
+              <p id="minimumNote" class="minimum-note">$1,199 company minimum applied</p>
+              <div class="metric-grid">
+                <div><span>Total area</span><strong id="totalArea">0 sq ft</strong></div>
+                <div><span>Base service</span><strong id="baseAfterDiscount">$0</strong></div>
+                <div><span>Upgrades</span><strong id="upgradeSubtotal">$0</strong></div>
+                <div><span>Effective $ / sq ft</span><strong id="effectiveRate">—</strong></div>
+              </div>
+            </section>
+
+            <section class="breakdown-card">
+              <div class="breakdown-title"><h3>Quote breakdown</h3><span>Internal</span></div>
+              <dl>
+                <div><dt>Front base</dt><dd id="frontSubtotal">$0</dd></div>
+                <div><dt>Lanai / back base</dt><dd id="backSubtotal">$0</dd></div>
+                <div><dt>Bundle discount</dt><dd id="discountAmount">$0</dd></div>
+                <div class="line"><dt>Calculated project</dt><dd id="calculatedTotal">$0</dd></div>
+              </dl>
+            </section>
+
+            <button id="newQuoteBtn" class="secondary-btn" type="button">Start New Quote</button>
+            <p class="field-rule">Pricing rules are built into TITUS. Sales reps should not reduce the $1,199 minimum or exceed the 10% bundle discount without management approval.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="screen-positioning" class="screen" aria-labelledby="positionHeading">
+        <p class="eyebrow">PRICE POSITIONING</p>
+        <h1 id="positionHeading">Show the value, not just the rate.</h1>
+        <p class="lede">Illustrative comparisons for the measured project. These are not competitor quotes.</p>
+        <div class="snapshot-row">
+          <div><span>Total project area</span><strong id="posArea">0 sq ft</strong></div>
+          <div><span>Revive base service</span><strong id="posBase">$0</strong></div>
+          <div><span>Configured project</span><strong id="posConfigured">$1,199</strong></div>
+        </div>
+        <div id="positionCards" class="position-grid"></div>
+        <div class="callout"><b>Customer-facing rule:</b> Compare written scope, preparation, joint work, sealing system, warranty, aftercare, and verified credentials. Never present these illustrative rates as actual competitor quotes.</div>
+      </section>
+
+      <section id="screen-pricing" class="screen" aria-labelledby="pricingHeading">
+        <p class="eyebrow">PRICING GUIDE</p>
+        <h1 id="pricingHeading">Revive working pricing reference.</h1>
+        <p class="lede">Internal field guide. Final pricing and exceptions remain subject to management approval.</p>
+        <div class="pricing-columns">
+          <section class="panel compact">
+            <div class="panel-heading"><div><span class="step">01</span><h2>Base service</h2></div></div>
+            <div class="reference-list">
+              <div><span>Front driveway / walkway</span><strong>$1.50/sf</strong><small>Easier access / no screen enclosure</small></div>
+              <div><span>Lanai / back area</span><strong>$2.00/sf</strong><small>Tighter, detail-heavy work</small></div>
+              <div><span>Minimum project</span><strong>$1,199</strong><small>Do not reduce without approval</small></div>
+            </div>
+          </section>
+          <section class="panel compact">
+            <div class="panel-heading"><div><span class="step">02</span><h2>Specialty upgrades</h2></div></div>
+            <div class="reference-list two-col">
+              <div><span>Joint tone enhancement</span><strong>+$0.35–$0.50/sf</strong><small>Calculator default: $0.40/sf</small></div>
+              <div><span>Color revival</span><strong>+$0.45–$0.75/sf</strong><small>Calculator default: $0.60/sf</small></div>
+              <div><span>Restore bundle</span><strong>+$0.75–$1.10/sf</strong><small>Calculator default: $0.90/sf</small></div>
+              <div><span>Accent border pop</span><strong>$295–$695</strong><small>Flat project price</small></div>
+              <div><span>Custom border</span><strong>$4–$7/lf</strong><small>Calculator default: $5.50/lf</small></div>
+              <div><span>Spot blend / problem areas</span><strong>$150–$350</strong><small>Flat project price</small></div>
+              <div><span>Designer accent finish</span><strong>$350–$750</strong><small>Flat project price</small></div>
+              <div><span>Full metallic veil</span><strong>+$750–$1,500</strong><small>Designer fee</small></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="screen-sales" class="screen" aria-labelledby="salesHeading">
+        <p class="eyebrow">SALES + FINANCING</p>
+        <h1 id="salesHeading">Keep the conversation simple.</h1>
+        <p class="lede">Use TITUS for the numbers. Use your presentation and Jobber for the customer experience.</p>
+        <div class="sales-grid">
+          <article class="note-card"><span>01</span><h3>Bundle discount</h3><p>Use only when both front and back are being completed. Apply 0%, 5%, or 10% to the combined base service only. Specialty upgrades stay full price.</p></article>
+          <article class="note-card"><span>02</span><h3>Present the price</h3><p>Do not walk the customer through every calculator line. Confirm the scope, present the final project price confidently, and explain the value behind the process.</p></article>
+          <article class="note-card featured"><span>03</span><h3>Financing language</h3><p>“We do offer financing through Wisetack right inside the Jobber quote. Wisetack will show you the personalized options available to you. I don’t want to guess at your payment because the terms are personalized.”</p></article>
+          <article class="note-card"><span>04</span><h3>Financing guardrail</h3><p>Do not promise approval, a specific APR, a specific monthly payment, or a 0% option. The customer reviews their own offer inside Jobber.</p></article>
+          <article class="note-card"><span>05</span><h3>Price positioning</h3><p>Compare preparation, joint work, sealing system, written warranty, aftercare, and verified credentials. Do not make unsupported claims about another contractor.</p></article>
+          <article class="note-card"><span>06</span><h3>Minimum project</h3><p>TITUS enforces the current $1,199 minimum. Do not reduce below the company minimum unless management approves the exception.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav" aria-label="TITUS sections">
+      <button class="nav-btn active" data-screen="quote" type="button"><span class="nav-icon">$</span><span>Quote</span></button>
+      <button class="nav-btn" data-screen="positioning" type="button"><span class="nav-icon">↗</span><span>Positioning</span></button>
+      <button class="nav-btn" data-screen="pricing" type="button"><span class="nav-icon">≡</span><span>Pricing</span></button>
+      <button class="nav-btn" data-screen="sales" type="button"><span class="nav-icon">✓</span><span>Sales</span></button>
+    </nav>
+  </div>
+  <script src="pricing-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
