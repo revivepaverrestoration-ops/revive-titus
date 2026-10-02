@@ -1,4 +1,4 @@
-REVIVE TITUS V1 - QA TEST CASES
+REVIVE TITUS V1.1 - QA TEST CASES
 
 1. Minimum job
 Front 500, back 0, no upgrades -> Final $1,199
@@ -17,3 +17,15 @@ Discount applies only when both front and back are greater than zero.
 
 6. Offline
 Load once online, switch browser context offline, reload -> app still loads and calculates.
+
+7. Project header
+Enter customer, address, estimator, and date -> values persist after refresh.
+
+8. New quote
+Start New Quote -> customer/address/measurements/upgrades/discount clear; estimator persists; date resets to today.
+
+9. Summary
+Review & Copy Summary -> summary shows project details, selected scope, selected upgrades, and final selling price.
+
+10. Copy
+Copy Jobber Summary -> clipboard receives plain-text summary on HTTPS.

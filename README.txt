@@ -1,4 +1,4 @@
-REVIVE TITUS SALES SYSTEM - PWA V1
+REVIVE TITUS SALES SYSTEM - PWA V1.1
 
 WHAT THIS IS
 A standalone, offline-first web app for Revive field quoting. It is designed for iPad and can be installed to the Home Screen after it is hosted over HTTPS.
@@ -41,3 +41,12 @@ INSTALL ON IPAD AFTER HOSTING
 
 IMPORTANT
 This package is ready to host, but it is not yet published to a public URL. A free static host such as Cloudflare Pages, Netlify, Vercel, or GitHub Pages can host it. A custom subdomain such as titus.revivepaverrestoration.com can be added later; it is not required for testing.
+
+
+V1.1 FIELD WORKFLOW UPGRADES
+- Customer name, project address, estimator, and date header
+- Estimator name persists across new quotes on the same iPad
+- Start New Quote clears customer/project values and all quote inputs while keeping the estimator
+- Review & Copy Summary modal for fast Jobber transfer
+- Copy Jobber Summary button copies project details, scope, discount, upgrades, and final selling price
+- Version label updated to V1.1

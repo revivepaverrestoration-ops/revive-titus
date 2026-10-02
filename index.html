@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.0</span>
+        <span class="version">V1.1</span>
       </div>
     </header>
 
@@ -40,6 +40,31 @@
           </div>
           <div class="hero-chip">Restore <span>•</span> Protect <span>•</span> Revive</div>
         </div>
+
+        <section class="panel project-panel">
+          <div class="panel-heading">
+            <div><span class="step">00</span><h2>Project details</h2></div>
+            <p>Saved only on this iPad until you start a new quote.</p>
+          </div>
+          <div class="project-grid">
+            <label class="project-field">
+              <span>Customer name</span>
+              <input id="customerName" type="text" autocomplete="name" placeholder="Customer name">
+            </label>
+            <label class="project-field project-field-wide">
+              <span>Project address</span>
+              <input id="projectAddress" type="text" autocomplete="street-address" placeholder="Street address">
+            </label>
+            <label class="project-field">
+              <span>Estimator</span>
+              <input id="estimatorName" type="text" autocomplete="name" placeholder="Estimator name">
+            </label>
+            <label class="project-field">
+              <span>Date</span>
+              <input id="quoteDate" type="date">
+            </label>
+          </div>
+        </section>
 
         <div class="quote-layout">
           <div class="stack">
@@ -117,7 +142,10 @@
               </dl>
             </section>
 
-            <button id="newQuoteBtn" class="secondary-btn" type="button">Start New Quote</button>
+            <div class="quote-actions">
+              <button id="reviewQuoteBtn" class="primary-btn" type="button">Review & Copy Summary</button>
+              <button id="newQuoteBtn" class="secondary-btn" type="button">Start New Quote</button>
+            </div>
             <p class="field-rule">Pricing rules are built into TITUS. Sales reps should not reduce the $1,199 minimum or exceed the 10% bundle discount without management approval.</p>
           </aside>
         </div>
@@ -179,6 +207,30 @@
         </div>
       </section>
     </main>
+
+    <dialog id="quoteSummaryDialog" class="summary-dialog">
+      <div class="summary-shell">
+        <div class="summary-head">
+          <div>
+            <p class="eyebrow">QUOTE SUMMARY</p>
+            <h2>Ready for Jobber.</h2>
+          </div>
+          <button id="closeSummaryBtn" class="icon-btn" type="button" aria-label="Close summary">×</button>
+        </div>
+        <div id="summaryProject" class="summary-project"></div>
+        <div id="summaryLines" class="summary-lines"></div>
+        <div class="summary-total">
+          <span>Final selling price</span>
+          <strong id="summaryFinalPrice">$1,199</strong>
+        </div>
+        <p class="summary-note">This summary is for internal quote transfer. The official customer quote and financing options remain in Jobber.</p>
+        <div class="summary-actions">
+          <button id="copySummaryBtn" class="primary-btn" type="button">Copy Jobber Summary</button>
+          <button id="doneSummaryBtn" class="secondary-btn" type="button">Done</button>
+        </div>
+        <div id="copyStatus" class="copy-status" role="status" aria-live="polite"></div>
+      </div>
+    </dialog>
 
     <nav class="bottom-nav" aria-label="TITUS sections">
       <button class="nav-btn active" data-screen="quote" type="button"><span class="nav-icon">$</span><span>Quote</span></button>

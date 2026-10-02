@@ -1,4 +1,4 @@
-const CACHE = 'revive-titus-v1-1';
+const CACHE = 'revive-titus-v1-2';
 const ASSETS = [
   './', './index.html', './styles.css', './pricing-engine.js', './app.js', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'
