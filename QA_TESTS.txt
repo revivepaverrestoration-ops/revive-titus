@@ -1,4 +1,4 @@
-REVIVE TITUS V1.1 - QA TEST CASES
+REVIVE TITUS V1.2 - QA TEST CASES
 
 1. Minimum job
 Front 500, back 0, no upgrades -> Final $1,199
@@ -29,3 +29,16 @@ Review & Copy Summary -> summary shows project details, selected scope, selected
 
 10. Copy
 Copy Jobber Summary -> clipboard receives plain-text summary on HTTPS.
+
+
+11. French drain cleanout
+Front 1000, French drain cleanout $450 -> Calculated $1,950; final $1,950.
+
+12. Paver repair
+Front 1000, paver repair $600 -> Calculated $2,100; final $2,100.
+
+13. Both new services
+Front 1000, French drain cleanout $450, paver repair $600 -> Upgrades $1,050; final $2,550.
+
+14. Persistence and summary
+Enter values for French drain cleanout and paver repair -> refresh preserves both; Review & Copy Summary lists both selected services.

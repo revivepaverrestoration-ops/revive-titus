@@ -1,4 +1,4 @@
-REVIVE TITUS SALES SYSTEM - PWA V1.1
+REVIVE TITUS SALES SYSTEM - PWA V1.2
 
 WHAT THIS IS
 A standalone, offline-first web app for Revive field quoting. It is designed for iPad and can be installed to the Home Screen after it is hosted over HTTPS.
@@ -16,6 +16,8 @@ V1 PRICING RULES
 - Spot blend / problem areas: flat input, typical $150-$350
 - Designer accent finish: flat input, typical $350-$750
 - Full metallic veil: flat input, typical $750-$1,500
+- French drain cleanout: custom flat input
+- Paver repair: custom flat input
 
 SCREENS
 1. Quote
@@ -50,3 +52,11 @@ V1.1 FIELD WORKFLOW UPGRADES
 - Review & Copy Summary modal for fast Jobber transfer
 - Copy Jobber Summary button copies project details, scope, discount, upgrades, and final selling price
 - Version label updated to V1.1
+
+
+V1.2 SERVICE UPGRADES
+- Added French drain cleanout as a custom flat-price specialty upgrade
+- Added paver repair as a custom flat-price specialty upgrade
+- Both services flow into the upgrade subtotal, final selling price, saved quote state, review modal, and Jobber summary
+- Pricing Guide now lists both as custom approved project pricing
+- Version label updated to V1.2

@@ -33,7 +33,9 @@
       nonneg(input.customBorderLf) * RULES.customBorderRate +
       nonneg(input.spotBlendFlat) +
       nonneg(input.designerAccentFlat) +
-      nonneg(input.metallicVeilFlat);
+      nonneg(input.metallicVeilFlat) +
+      nonneg(input.frenchDrainCleanoutFlat) +
+      nonneg(input.paverRepairFlat);
     const calculated = baseAfterDiscount + upgrades;
     const finalPrice = Math.max(calculated, RULES.minimum);
     const totalArea = front + back;

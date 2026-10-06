@@ -1,7 +1,7 @@
 (() => {
   'use strict';
   const { RULES, calculate: priceQuote } = window.TitusPricing;
-  const quoteIds = ['frontSqft','backSqft','bundleDiscount','jointToneSqft','colorRevivalSqft','restoreBundleSqft','accentBorderFlat','customBorderLf','spotBlendFlat','designerAccentFlat','metallicVeilFlat'];
+  const quoteIds = ['frontSqft','backSqft','bundleDiscount','jointToneSqft','colorRevivalSqft','restoreBundleSqft','accentBorderFlat','customBorderLf','spotBlendFlat','designerAccentFlat','metallicVeilFlat','frenchDrainCleanoutFlat','paverRepairFlat'];
   const projectIds = ['customerName','projectAddress','estimatorName','quoteDate'];
   const $ = (id) => document.getElementById(id);
   const money = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 });
@@ -67,7 +67,7 @@
     try {
       const state = {};
       [...quoteIds, ...projectIds].forEach(id => state[id] = $(id).value);
-      localStorage.setItem('revive-titus-v1-1', JSON.stringify(state));
+      localStorage.setItem('revive-titus-v1-2', JSON.stringify(state));
       if ($('estimatorName').value.trim()) localStorage.setItem('revive-titus-estimator', $('estimatorName').value.trim());
     } catch (_) {}
   }
@@ -75,9 +75,10 @@
   function loadState() {
     try {
       const legacy = JSON.parse(localStorage.getItem('revive-titus-v1') || '{}');
-      const state = JSON.parse(localStorage.getItem('revive-titus-v1-1') || '{}');
+      const prior = JSON.parse(localStorage.getItem('revive-titus-v1-1') || '{}');
+      const state = JSON.parse(localStorage.getItem('revive-titus-v1-2') || '{}');
       quoteIds.forEach(id => {
-        const value = state[id] !== undefined ? state[id] : legacy[id];
+        const value = state[id] !== undefined ? state[id] : (prior[id] !== undefined ? prior[id] : legacy[id]);
         if (value !== undefined) $(id).value = value;
       });
       projectIds.forEach(id => { if (state[id] !== undefined) $(id).value = state[id]; });
@@ -122,7 +123,9 @@
       'Custom border': [Number($('customBorderLf').value)||0, 'lf'],
       'Spot blend / problem areas': [Number($('spotBlendFlat').value)||0, '$'],
       'Designer accent finish': [Number($('designerAccentFlat').value)||0, '$'],
-      'Full metallic veil': [Number($('metallicVeilFlat').value)||0, '$']
+      'Full metallic veil': [Number($('metallicVeilFlat').value)||0, '$'],
+      'French drain cleanout': [Number($('frenchDrainCleanoutFlat').value)||0, '$'],
+      'Paver repair': [Number($('paverRepairFlat').value)||0, '$']
     };
     return Object.entries(vals).filter(([,v]) => v[0] > 0);
   }
