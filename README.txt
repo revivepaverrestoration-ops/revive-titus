@@ -116,3 +116,11 @@ V1.6
 - Review & Copy Summary now includes customer phone and email for Jobber matching.
 - Updated project/summary layouts and offline cache.
 - This is the customer-matching preparation step for the future secure TITUS -> Jobber draft quote handoff.
+
+
+V1.6.1
+- Replaced the native bundle-discount dropdown with six large technician-friendly buttons.
+- 0%, 5%, and 10% are standard selections.
+- 12%, 15%, and 20% remain manager-approval selections and retain the confirmation guardrail.
+- Hidden select remains as the pricing/state source of truth for compatibility.
+- Service-worker cache bumped so installed iPad PWAs receive the selector fix.

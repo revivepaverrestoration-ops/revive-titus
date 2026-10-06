@@ -30,6 +30,15 @@
     });
   }
 
+  function syncDiscountButtons() {
+    const selected = String($('bundleDiscount').value || '0');
+    document.querySelectorAll('.discount-btn').forEach(btn => {
+      const active = btn.dataset.discount === selected;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
   function todayISO() {
     const d = new Date();
     const y = d.getFullYear();
@@ -79,6 +88,7 @@
     $('posConfigured').textContent = q.effectiveRate === null ? '—' : `$${rateFmt.format(q.effectiveRate)} / sq ft`;
     renderPositioning(q);
     syncStoryButtons();
+    syncDiscountButtons();
     saveState();
   }
 
@@ -385,6 +395,10 @@
   $('doneSummaryBtn').addEventListener('click', closeSummary);
   $('copySummaryBtn').addEventListener('click', copySummary);
   $('quoteSummaryDialog').addEventListener('click', (event) => { if (event.target === $('quoteSummaryDialog')) closeSummary(); });
+  document.querySelectorAll('.discount-btn').forEach(btn => btn.addEventListener('click', () => {
+    $('bundleDiscount').value = btn.dataset.discount;
+    handleBundleDiscountChange();
+  }));
   document.querySelectorAll('.story-btn').forEach(btn => btn.addEventListener('click', () => {
     $('houseStories').value = btn.dataset.story;
     render();

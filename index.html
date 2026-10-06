@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.6</span>
+        <span class="version">V1.6.1</span>
       </div>
     </header>
 
@@ -97,17 +97,23 @@
                 <label class="field-card">
                   <span class="field-label">Bundle discount</span>
                   <span class="field-help">Use only when front + back are both included</span>
-                  <div class="input-wrap select-wrap">
-                    <select id="bundleDiscount" aria-label="Bundle discount">
-                      <option value="0">0%</option>
-                      <option value="0.05">5%</option>
-                      <option value="0.10">10%</option>
-                      <option value="0.12">12% — Manager approval</option>
-                      <option value="0.15">15% — Manager approval</option>
-                      <option value="0.20">20% — Manager approval</option>
-                    </select>
+                  <div class="discount-toggle" role="group" aria-label="Bundle discount">
+                    <button type="button" class="discount-btn active" data-discount="0" aria-pressed="true">0%</button>
+                    <button type="button" class="discount-btn" data-discount="0.05" aria-pressed="false">5%</button>
+                    <button type="button" class="discount-btn" data-discount="0.10" aria-pressed="false">10%</button>
+                    <button type="button" class="discount-btn manager" data-discount="0.12" aria-pressed="false">12% <small>MGR</small></button>
+                    <button type="button" class="discount-btn manager" data-discount="0.15" aria-pressed="false">15% <small>MGR</small></button>
+                    <button type="button" class="discount-btn manager" data-discount="0.20" aria-pressed="false">20% <small>MGR</small></button>
                   </div>
-                  <span class="rate-pill warning">10% standard • 12–20% manager approval</span>
+                  <select id="bundleDiscount" class="discount-select-fallback" aria-label="Bundle discount">
+                    <option value="0">0%</option>
+                    <option value="0.05">5%</option>
+                    <option value="0.10">10%</option>
+                    <option value="0.12">12% — Manager approval</option>
+                    <option value="0.15">15% — Manager approval</option>
+                    <option value="0.20">20% — Manager approval</option>
+                  </select>
+                  <span class="rate-pill warning">0–10% standard • 12–20% manager approval</span>
                 </label>
               </div>
             </section>

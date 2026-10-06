@@ -116,3 +116,12 @@ V1.6 ROOF PRICING REVISION
 - 4,000 sq ft roof -> $1,800.
 - 5,000 sq ft roof -> $2,250.
 - 500 sq ft pavers + 1,500 sq ft roof -> $1,199 pavers + $1,200 roof = $2,399.
+
+
+V1.6.1 BUNDLE DISCOUNT SELECTOR CHECKS
+- Native bundle-discount dropdown removed from visible UI.
+- Six visible buttons: 0%, 5%, 10%, 12% MGR, 15% MGR, 20% MGR.
+- Active button mirrors hidden bundleDiscount select value.
+- 12%, 15%, and 20% still require manager confirmation before applying.
+- Declined manager approval restores the previously approved discount.
+- Pricing engine remains unchanged.
