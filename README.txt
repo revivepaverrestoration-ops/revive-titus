@@ -1,4 +1,4 @@
-REVIVE TITUS SALES SYSTEM - PWA V1.4
+REVIVE TITUS SALES SYSTEM - PWA V1.5
 
 WHAT THIS IS
 A standalone, offline-first field quoting app for Revive Paver Restoration. It is designed for iPad, uses protected pricing logic instead of spreadsheet cells, and can be installed to the Home Screen after hosting over HTTPS.
@@ -89,3 +89,14 @@ INSTALL ON IPAD AFTER HOSTING
 4. Turn on Open as Web App if shown.
 5. Name it TITUS and tap Add.
 6. Open TITUS once while online so the offline cache is populated.
+
+
+V1.5 CHANGES
+- Simplified Price Positioning from five cards to three internal training references:
+  Chuck in the Truck ($1.00/sq ft), Revive Professional Restoration (actual paver project), and Top-Dollar Todd ($3.50/sq ft).
+- Positioning now uses only paver base + selected paver upgrades. Exterior services can never change the paver comparison.
+- Added explicit paverProjectTotal to the pricing engine.
+- Changed all user-visible "lf" abbreviations to "linear ft".
+- Reorganized Pricing Guide into Paver Base, Paver Upgrades, Pressure/Soft Washing, Exterior Add-ons, and Packages.
+- Simplified Sales screen and clarified bundle discount, paver minimum, package, financing, and exterior-service rules.
+- Updated offline cache and local-storage version to V1.5 while retaining V1.4 quote-state migration.

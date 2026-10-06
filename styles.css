@@ -93,7 +93,7 @@ dl .line { border-top: 1px solid var(--line); color: white; }
 .snapshot-row div { padding: 20px; background: var(--panel); }
 .snapshot-row span { color: var(--muted); display: block; font-size: 12px; margin-bottom: 8px; }
 .snapshot-row strong { font-size: 25px; }
-.position-grid { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 12px; }
+.position-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; }
 .position-card { min-height: 250px; padding: 18px; border-radius: 18px; border: 1px solid var(--line); background: var(--panel); display: flex; flex-direction: column; }
 .position-card.revive { border-color: rgba(38,216,237,.34); background: linear-gradient(180deg, rgba(38,216,237,.10), rgba(255,255,255,.025)); }
 .position-card .tag { color: var(--muted); font-size: 11px; letter-spacing: .09em; font-weight: 900; text-transform: uppercase; }
@@ -128,8 +128,8 @@ dl .line { border-top: 1px solid var(--line); color: white; }
   .price-rail .secondary-btn,.price-rail .field-rule { grid-column: 1 / -1; }
   .field-grid { grid-template-columns: 1fr 1fr; }
   .field-grid .field-card:last-child { grid-column: 1 / -1; min-height: 170px; }
-  .position-grid { grid-template-columns: repeat(2,1fr); }
-  .position-card:last-child { grid-column: 1 / -1; }
+  .position-grid { grid-template-columns: repeat(3,1fr); }
+  .position-card:last-child { grid-column: auto; }
   .pricing-columns { grid-template-columns: 1fr; }
 }
 @media (max-width: 760px) {
@@ -200,7 +200,7 @@ dl .line { border-top: 1px solid var(--line); color: white; }
   .summary-actions { grid-template-columns: 1fr; }
 }
 
-/* TITUS V1.4 - exterior cleaning and add-on estimator */
+/* TITUS V1.5 - simplified positioning and field guide */
 .exterior-panel { overflow: hidden; }
 .service-group { border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.018); margin-top: 12px; overflow: hidden; }
 .service-group:first-of-type { margin-top: 0; }

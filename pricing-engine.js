@@ -136,15 +136,16 @@
       poolDeckCleaning + poolCagePrice + gutterInteriorCleaning + fixedExterior +
       oneTimePoolClean + packagePrice + customPackageFlat;
 
-    const calculated = paverBaseFinal + paverUpgrades + exteriorServices;
+    const paverProjectTotal = paverBaseFinal + paverUpgrades;
+    const calculated = paverProjectTotal + exteriorServices;
     const finalPrice = calculated;
     const totalArea = front + back;
-    const effectiveRate = totalArea > 0 ? (paverBaseFinal + paverUpgrades) / totalArea : null;
+    const effectiveRate = totalArea > 0 ? paverProjectTotal / totalArea : null;
 
     return {
       front, back, totalArea, bundleDiscount,
       frontSubtotal, backSubtotal, baseSubtotal, discountAmount, baseAfterDiscount,
-      hasPaverBase, paverBaseFinal, paverMinimumAdjustment, paverUpgrades,
+      hasPaverBase, paverBaseFinal, paverMinimumAdjustment, paverUpgrades, paverProjectTotal,
       houseSqft, houseStories, houseBase, houseStoryAdd, houseAdjustment, houseWash,
       roofSqft, roofBase, roofAdjustment, roofWash,
       drivewayCleaningSqft, drivewayCleaning,

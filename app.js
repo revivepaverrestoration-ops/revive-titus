@@ -66,23 +66,20 @@
     $('gutterInteriorCalc').textContent = money.format(q.gutterInteriorCleaning);
 
     $('posArea').textContent = `${numberFmt.format(q.totalArea)} sq ft`;
-    $('posBase').textContent = money.format(q.paverBaseFinal);
-    $('posConfigured').textContent = money.format(q.finalPrice);
+    $('posBase').textContent = money.format(q.paverProjectTotal);
+    $('posConfigured').textContent = q.effectiveRate === null ? '—' : `$${rateFmt.format(q.effectiveRate)} / sq ft`;
     renderPositioning(q);
     saveState();
   }
 
   function renderPositioning(q) {
     const low = q.totalArea * 1;
-    const premium = q.totalArea * 3;
     const high = q.totalArea * 3.5;
-    const reviveBaseRate = q.totalArea > 0 ? q.paverBaseFinal / q.totalArea : 0;
+    const reviveRate = q.effectiveRate;
     const cards = [
-      ['Illustrative', 'Low-price / basic-service example', '$1.00 / sf', low, 'Scope may be different. Verify preparation, joint work, sealer, warranty, aftercare, and credentials.', false],
-      ['Revive', 'Base professional paver service', q.totalArea ? `$${rateFmt.format(reviveBaseRate)} / sf` : '—', q.paverBaseFinal, 'Owner-confirmed paver base rates with the $1,199 minimum when applicable.', true],
-      ['Revive', 'Project as configured', 'Pavers + selected add-ons', q.finalPrice, 'Includes all selected restoration upgrades and exterior services.', true],
-      ['Illustrative', 'Premium-priced example', '$3.00 / sf', premium, 'Illustrative paver comparison only — not a competitor quote.', false],
-      ['Illustrative', 'Higher premium-priced example', '$3.50 / sf', high, 'Illustrative paver comparison only — not a competitor quote.', false]
+      ['Low-price example', 'Chuck in the Truck', '$1.00 / sq ft', low, 'Illustrative basic-service paver example. Scope can be very different from Revive.', false],
+      ['Revive', 'Revive Professional Restoration', reviveRate === null ? '—' : `$${rateFmt.format(reviveRate)} / sq ft`, q.paverProjectTotal, 'Your actual paver project: base restoration, approved bundle discount, and selected paver upgrades. Exterior services are excluded.', true],
+      ['Higher-price example', 'Top-Dollar Todd', '$3.50 / sq ft', high, 'Illustrative higher-price paver example. This is not an actual competitor quote.', false]
     ];
     $('positionCards').innerHTML = cards.map(c => `
       <article class="position-card${c[5] ? ' revive' : ''}">
@@ -98,7 +95,7 @@
     try {
       const state = {};
       [...quoteIds, ...projectIds].forEach(id => state[id] = $(id).value);
-      localStorage.setItem('revive-titus-v1-4', JSON.stringify(state));
+      localStorage.setItem('revive-titus-v1-5', JSON.stringify(state));
       if ($('estimatorName').value.trim()) localStorage.setItem('revive-titus-estimator', $('estimatorName').value.trim());
     } catch (_) {}
   }
@@ -109,19 +106,21 @@
       const v11 = JSON.parse(localStorage.getItem('revive-titus-v1-1') || '{}');
       const v12 = JSON.parse(localStorage.getItem('revive-titus-v1-2') || '{}');
       const v13 = JSON.parse(localStorage.getItem('revive-titus-v1-3') || '{}');
-      const state = JSON.parse(localStorage.getItem('revive-titus-v1-4') || '{}');
+      const v14 = JSON.parse(localStorage.getItem('revive-titus-v1-4') || '{}');
+      const state = JSON.parse(localStorage.getItem('revive-titus-v1-5') || '{}');
       quoteIds.forEach(id => {
         const value = state[id] !== undefined ? state[id]
+          : (v14[id] !== undefined ? v14[id]
           : (v13[id] !== undefined ? v13[id]
           : (v12[id] !== undefined ? v12[id]
-          : (v11[id] !== undefined ? v11[id] : legacy[id])));
+          : (v11[id] !== undefined ? v11[id] : legacy[id]))));
         if (value !== undefined) {
           if (selectDefaults[id] !== undefined) $(id).value = String(value || selectDefaults[id]);
           else $(id).value = Number(value) === 0 ? '' : value;
         }
       });
       projectIds.forEach(id => {
-        const value = state[id] !== undefined ? state[id] : (v13[id] !== undefined ? v13[id] : v12[id]);
+        const value = state[id] !== undefined ? state[id] : (v14[id] !== undefined ? v14[id] : (v13[id] !== undefined ? v13[id] : v12[id]));
         if (value !== undefined) $(id).value = value;
       });
       if (!$('estimatorName').value) $('estimatorName').value = localStorage.getItem('revive-titus-estimator') || '';
@@ -141,7 +140,7 @@
     $('estimatorName').value = estimator;
     $('quoteDate').value = todayISO();
     try {
-      ['revive-titus-v1','revive-titus-v1-1','revive-titus-v1-2','revive-titus-v1-3','revive-titus-v1-4'].forEach(k => localStorage.removeItem(k));
+      ['revive-titus-v1','revive-titus-v1-1','revive-titus-v1-2','revive-titus-v1-3','revive-titus-v1-4','revive-titus-v1-5'].forEach(k => localStorage.removeItem(k));
     } catch (_) {}
     render();
     $('customerName').focus();
@@ -175,7 +174,7 @@
     if (cr > 0) rows.push(['Color Revival', `${numberFmt.format(cr)} sq ft`, cr * RULES.colorRevivalRate]);
     if (rb > 0) rows.push(['Restore Bundle', `${numberFmt.format(rb)} sq ft`, rb * RULES.restoreBundleRate]);
     if (ab > 0) rows.push(['Accent Border Pop', 'Flat project price', ab]);
-    if (cb > 0) rows.push(['Custom Border', `${numberFmt.format(cb)} lf`, cb * RULES.customBorderRate]);
+    if (cb > 0) rows.push(['Custom Border', `${numberFmt.format(cb)} linear ft`, cb * RULES.customBorderRate]);
     if (sb > 0) rows.push(['Spot Blend / Problem Areas', 'Flat project price', sb]);
     if (da > 0) rows.push(['Designer Accent Finish', 'Flat project price', da]);
     if (mv > 0) rows.push(['Full Metallic Veil / Metal Flake Finish', 'Flat project price', mv]);
@@ -196,7 +195,7 @@
     if (q.poolDeckCleaningSqft > 0) rows.push(['Lanai, Patio & Pool Deck Floor Cleaning', `${numberFmt.format(q.poolDeckCleaningSqft)} sq ft`, q.poolDeckCleaning]);
     if (q.poolCagePrice > 0) rows.push(['Pool Cage & Screen Enclosure Cleaning', $('poolCageTier').selectedOptions[0].textContent.replace(/ — .*/, ''), q.poolCagePrice]);
     if (q.oneTimePoolClean > 0) rows.push(['One-Time Pool Clean & Chemical Balance', 'Saved Jobber service', q.oneTimePoolClean]);
-    if (q.gutterInteriorLf > 0) rows.push(['Gutter Interior Cleaning', `${numberFmt.format(q.gutterInteriorLf)} lf`, q.gutterInteriorCleaning]);
+    if (q.gutterInteriorLf > 0) rows.push(['Gutter Interior Cleaning', `${numberFmt.format(q.gutterInteriorLf)} linear ft`, q.gutterInteriorCleaning]);
     const fixed = [
       ['Exterior Gutter Brightening','exteriorGutterBrighteningFlat'],
       ['Fence Cleaning','fenceCleaningFlat'],

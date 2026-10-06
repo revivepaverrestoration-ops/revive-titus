@@ -1,64 +1,85 @@
-REVIVE TITUS V1.4 - QA TEST CASES
+REVIVE TITUS V1.5 - QA TESTS
+
+AUTOMATED CHECK RESULTS
+- 370 pricing-engine checks passed.
+- 83 unique HTML element IDs checked.
+- 54 app DOM references checked: 0 missing.
+- Duplicate HTML IDs: 0.
+- app.js syntax: PASS.
+- pricing-engine.js syntax: PASS.
+- service-worker.js syntax: PASS.
+- User-visible "lf" abbreviation removed; interface uses "linear ft".
 
 PAVER CORE
 1. Blank quote -> Final $0.
 2. Front 500, no upgrades -> paver base final $1,199; final $1,199.
-3. Front 1000 -> final $1,500.
-4. Front 1000 + back 500 + 10% -> base $2,500; discount $250; paver base final $2,250.
-5. Front 1000 + back 500 + 20% -> base $2,500; discount $500; paver base final $2,000 after manager approval.
+3. Front 1,000 -> final $1,500.
+4. Front 1,000 + back 500 + 10% -> base $2,500; discount $250; paver base final $2,250.
+5. Front 1,000 + back 500 + 20% -> paver base final $2,000 after manager approval.
 6. Front-only with any bundle discount selected -> applied bundle discount $0.
-7. Front 500 + paver repair $350 -> paver base final $1,199 + repair $350 = final $1,549. This verifies upgrades are no longer absorbed by the paver minimum.
-8. Front 500 + joint tone 500 -> $1,199 + $200 = $1,399.
+7. Front 500 + paver repair $350 -> $1,199 + $350 = $1,549.
+8. Paver specialty upgrades are added after the paver base minimum.
+9. Paver project total = paver base final + paver upgrades only.
+
+EXTERIOR SEPARATION
+10. House Soft Wash only, 2,000 sq ft -> $299; paver total remains $0.
+11. Roof Soft Wash only, 1,500 sq ft -> $599; paver total remains $0.
+12. Driveway cleaning only, 500 sq ft -> $149; paver total remains $0.
+13. Gutter cleaning only, 100 linear ft -> $149; paver total remains $0.
+14. Entry Refresh package only -> $249; paver total remains $0.
+15. French Drain Cleanout entered at $249 -> final $249; paver total remains $0.
+16. Front 500 + House Soft Wash 2,000 sq ft -> pavers $1,199 + house $299 = $1,498.
+17. Front 500 + paver repair $350 + House Soft Wash $299 -> paver project $1,549; final $1,848.
+18. Paver bundle discount never discounts house wash, roof wash, pressure washing, gutters, packages, or other exterior work.
+19. Effective paver rate is unchanged when exterior services are added.
+20. Final selling price always equals paver project total + exterior services total.
 
 HOUSE SOFT WASH
-9. House 1,500 sf, 1 story -> $249.
-10. House 2,000 sf, 1 story -> $299.
-11. House 2,500 sf, 1 story -> $349.
-12. House 4,000 sf, 1 story -> $499.
-13. House 5,000 sf, 1 story -> $699.
-14. House 2,000 sf, 2 stories -> $374 ($299 + $75).
-15. House 2,000 sf, 3+ stories -> $449 ($299 + $150).
-16. House 2,000 sf, 2 stories + $50 field adjustment -> $424.
-17. House 5,500 sf -> base stays at $699 and UI flags custom/manager review; adjustment field must be used to finish custom pricing.
+21. 1,500 sq ft, 1 story -> $249.
+22. 2,000 sq ft, 1 story -> $299.
+23. 4,000 sq ft, 1 story -> $499.
+24. 5,000 sq ft, 1 story -> $699.
+25. 2,000 sq ft, 2 stories -> $374.
+26. 2,000 sq ft, 3+ stories -> $449.
+27. Over 5,000 sq ft -> custom/manager review flag.
 
-ROOF / FLATWORK
-18. Roof 1,500 sf -> $599 minimum.
-19. Roof 2,500 sf -> $750.
-20. Roof 2,500 sf + $100 access adjustment -> $850.
-21. Driveway cleaning 500 sf -> $149 minimum.
-22. Driveway cleaning 1,000 sf -> $200.
-23. Sidewalk/curb 200 sf -> $99 minimum.
-24. Sidewalk/curb 600 sf -> $120.
-25. Pool deck floor 400 sf -> $149 minimum.
-26. Pool deck floor 800 sf -> $200.
-27. Gutter interior 100 lf -> $149 minimum.
-28. Gutter interior 200 lf -> $200.
+ROOF / FLATWORK / GUTTERS
+28. Roof 1,000 sq ft -> $599 minimum.
+29. Roof 3,000 sq ft -> $900.
+30. Driveway 500 sq ft -> $149 minimum.
+31. Driveway 1,000 sq ft -> $200.
+32. Sidewalk/curb 200 sq ft -> $99 minimum.
+33. Pool deck 400 sq ft -> $149 minimum.
+34. Gutter interior 100 linear ft -> $149 minimum.
+35. Gutter interior 200 linear ft -> $200.
 
-FIXED / SAVED SERVICES
-29. Standard pool cage -> $299.
-30. Large/tall pool cage -> $399.
-31. One-Time Pool Clean selected -> $150.
-32. French drain entered $249 -> adds $249.
-33. Flat-price stain/fence/gutter/custom fields add exactly the entered amount.
+POSITIONING
+36. Positioning has exactly three comparison cards.
+37. Low-price card reads "Chuck in the Truck" at $1.00 / sq ft.
+38. Revive card uses the actual paver project total: paver base + selected paver upgrades.
+39. Revive positioning excludes all exterior services.
+40. High-price card reads "Top-Dollar Todd" at $3.50 / sq ft.
+41. Positioning screen explicitly states exterior services are excluded.
+42. Internal callout says the nicknames are not customer-facing language.
 
-PACKAGES
-34. Entry Refresh -> adds $249.
-35. Curb Appeal -> adds $449.
-36. Outdoor Living Refresh -> adds $349.
-37. Whole Property -> adds $849.
-38. Custom package $1,200 -> adds $1,200.
-39. Package + individual services are both added; UI warning reminds estimator not to duplicate included scope.
+PRICING GUIDE
+43. Step 01 = Paver base service.
+44. Step 02 = Paver specialty upgrades.
+45. Step 03 = Pressure washing & soft washing.
+46. Step 04 = Exterior add-ons.
+47. Step 05 = Revive cleaning packages.
+48. Square-foot wording is displayed as "sq ft" and linear-foot wording as "linear ft".
 
-MIXED PROJECTS
-40. Front 500 + House Soft Wash 2,000 sf -> $1,199 paver base + $299 house = $1,498.
-41. Front 1,000 + Roof 2,000 sf -> $1,500 + $600 = $2,100.
-42. Exterior-only House 2,000 sf -> final $299, NOT $1,199.
-43. Exterior-only Entry Refresh package -> final $249, NOT $1,199.
+SALES SCREEN
+49. Sales screen explains paver pricing first, then positioning, then exterior upsells.
+50. Package guardrail prevents double-counting included services.
+51. Exterior services are not automatically discounted.
+52. $1,199 minimum is clearly identified as paver restoration/sealing base only.
+53. Wisetack language does not promise approval, APR, monthly payment, or 0% financing.
 
-STATE / UX
-44. Numeric inputs start blank and blanks calculate as zero.
-45. Start New Quote clears all quote/service/package fields, preserves estimator, resets date.
-46. Quote state persists after refresh using revive-titus-v1-4 storage key.
-47. Review & Copy Summary lists paver base, discount/minimum adjustment, paver upgrades, all exterior services/packages, and final selling price.
-48. Offline: load once online, disable connection, reopen -> app loads and calculates.
-49. Version badge reads V1.4.
+STATE / OFFLINE
+54. Numeric inputs start blank and blanks calculate as zero.
+55. Start New Quote clears quote/service/package fields, preserves estimator, resets date.
+56. V1.5 reads old V1.4 saved quote state, then saves under revive-titus-v1-5.
+57. Offline cache name is revive-titus-v1-5-positioning.
+58. Version badge reads V1.5.

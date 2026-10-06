@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.4</span>
+        <span class="version">V1.5</span>
       </div>
     </header>
 
@@ -114,7 +114,7 @@
                 <label class="upgrade-row"><span><b>Color revival</b><small>Default +$0.60 / sq ft</small></span><div class="mini-input"><input id="colorRevivalSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
                 <label class="upgrade-row"><span><b>Restore bundle</b><small>Default +$0.90 / sq ft</small></span><div class="mini-input"><input id="restoreBundleSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
                 <label class="upgrade-row"><span><b>Accent border pop</b><small>Typical $295–$695</small></span><div class="mini-input currency"><span>$</span><input id="accentBorderFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
-                <label class="upgrade-row"><span><b>Custom border</b><small>Default $5.50 / linear ft</small></span><div class="mini-input"><input id="customBorderLf" type="number" inputmode="decimal" min="0" step="1"><span>lf</span></div></label>
+                <label class="upgrade-row"><span><b>Custom border</b><small>Default $5.50 / linear ft</small></span><div class="mini-input"><input id="customBorderLf" type="number" inputmode="decimal" min="0" step="1"><span>linear ft</span></div></label>
                 <label class="upgrade-row"><span><b>Spot blend / problem areas</b><small>Typical $150–$350</small></span><div class="mini-input currency"><span>$</span><input id="spotBlendFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
                 <label class="upgrade-row"><span><b>Designer accent finish</b><small>Typical $350–$750</small></span><div class="mini-input currency"><span>$</span><input id="designerAccentFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
                 <label class="upgrade-row"><span><b>Full metallic veil</b><small>Typical $750–$1,500</small></span><div class="mini-input currency"><span>$</span><input id="metallicVeilFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
@@ -141,7 +141,7 @@
                     </div>
                   </label>
                   <label class="service-row">
-                    <span><b>Roof Soft Wash</b><small>$0.30/sf guide • $599 minimum • add for pitch, tile, access, or heavy condition</small></span>
+                    <span><b>Roof Soft Wash</b><small>$0.30 / sq ft guide • $599 minimum • add for pitch, tile, access, or heavy condition</small></span>
                     <div class="service-controls">
                       <div class="mini-input"><input id="roofWashSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div>
                       <div class="mini-input currency"><span>+$</span><input id="roofWashAdjustmentFlat" type="number" inputmode="decimal" min="0" step="1" placeholder="0"></div>
@@ -154,8 +154,8 @@
               <details class="service-group">
                 <summary><span>Driveway, sidewalk & entry</span><small>Pressure cleaning / hardscape</small></summary>
                 <div class="service-grid">
-                  <label class="service-row"><span><b>Driveway Pressure Cleaning</b><small>$0.20/sf guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="drivewayCleaningSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="drivewayCleaningCalc" class="service-price">$0</strong></div></label>
-                  <label class="service-row"><span><b>Sidewalk & Street Curb Cleaning</b><small>$0.20/sf guide • $99 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="sidewalkCurbSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="sidewalkCurbCalc" class="service-price">$0</strong></div></label>
+                  <label class="service-row"><span><b>Driveway Pressure Cleaning</b><small>$0.20 / sq ft guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="drivewayCleaningSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="drivewayCleaningCalc" class="service-price">$0</strong></div></label>
+                  <label class="service-row"><span><b>Sidewalk & Street Curb Cleaning</b><small>$0.20 / sq ft guide • $99 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="sidewalkCurbSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="sidewalkCurbCalc" class="service-price">$0</strong></div></label>
                   <label class="service-row"><span><b>Front Porch & Entry Cleaning</b><small>Enter approved flat add-on price</small></span><div class="service-controls"><div class="mini-input currency"><span>$</span><input id="frontPorchEntryFlat" type="number" inputmode="decimal" min="0" step="1"></div></div></label>
                   <label class="service-row"><span><b>Concrete Cleaning & Protective Sealing</b><small>Project-specific flat price</small></span><div class="service-controls"><div class="mini-input currency"><span>$</span><input id="concreteCleaningSealingFlat" type="number" inputmode="decimal" min="0" step="1"></div></div></label>
                 </div>
@@ -164,7 +164,7 @@
               <details class="service-group">
                 <summary><span>Lanai, pool & screen enclosure</span><small>Outdoor living add-ons</small></summary>
                 <div class="service-grid">
-                  <label class="service-row"><span><b>Lanai / Patio / Pool Deck Floor Cleaning</b><small>$0.25/sf guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="poolDeckCleaningSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="poolDeckCleaningCalc" class="service-price">$0</strong></div></label>
+                  <label class="service-row"><span><b>Lanai / Patio / Pool Deck Floor Cleaning</b><small>$0.25 / sq ft guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="poolDeckCleaningSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div><strong id="poolDeckCleaningCalc" class="service-price">$0</strong></div></label>
                   <label class="service-row"><span><b>Pool Cage & Screen Enclosure Cleaning</b><small>Standard $299 • Large/tall $399 • custom if oversized/two-story</small></span><div class="service-controls"><select id="poolCageTier" class="mini-select wide" aria-label="Pool cage pricing"><option value="0">None</option><option value="299">Standard — $299</option><option value="399">Large / tall — $399</option></select><strong id="poolCageCalc" class="service-price">$0</strong></div></label>
                   <label class="service-row"><span><b>One-Time Pool Clean & Chemical Balance</b><small>Jobber saved service: $150</small></span><div class="service-controls"><select id="oneTimePoolClean" class="mini-select wide" aria-label="One-time pool clean"><option value="0">Not included</option><option value="150">Add — $150</option></select><strong id="poolCleanCalc" class="service-price">$0</strong></div></label>
                 </div>
@@ -173,7 +173,7 @@
               <details class="service-group">
                 <summary><span>Gutters, fence & drainage</span><small>Property maintenance add-ons</small></summary>
                 <div class="service-grid">
-                  <label class="service-row"><span><b>Gutter Interior Cleaning</b><small>$1.00/lf guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="gutterInteriorLf" type="number" inputmode="decimal" min="0" step="1" placeholder="lf"><span>lf</span></div><strong id="gutterInteriorCalc" class="service-price">$0</strong></div></label>
+                  <label class="service-row"><span><b>Gutter Interior Cleaning</b><small>$1.00 / linear ft guide • $149 minimum</small></span><div class="service-controls"><div class="mini-input"><input id="gutterInteriorLf" type="number" inputmode="decimal" min="0" step="1" placeholder="linear ft"><span>linear ft</span></div><strong id="gutterInteriorCalc" class="service-price">$0</strong></div></label>
                   <label class="service-row"><span><b>Exterior Gutter Brightening</b><small>Enter approved flat add-on price</small></span><div class="service-controls"><div class="mini-input currency"><span>$</span><input id="exteriorGutterBrighteningFlat" type="number" inputmode="decimal" min="0" step="1"></div></div></label>
                   <label class="service-row"><span><b>Fence Cleaning</b><small>Enter approved project price</small></span><div class="service-controls"><div class="mini-input currency"><span>$</span><input id="fenceCleaningFlat" type="number" inputmode="decimal" min="0" step="1"></div></div></label>
                   <label class="service-row"><span><b>Fence Staining & Protection</b><small>Enter approved project price</small></span><div class="service-controls"><div class="mini-input currency"><span>$</span><input id="fenceStainingFlat" type="number" inputmode="decimal" min="0" step="1"></div></div></label>
@@ -238,16 +238,16 @@
       </section>
 
       <section id="screen-positioning" class="screen" aria-labelledby="positionHeading">
-        <p class="eyebrow">PRICE POSITIONING</p>
-        <h1 id="positionHeading">Show the value, not just the rate.</h1>
-        <p class="lede">Illustrative comparisons for the measured project. These are not competitor quotes.</p>
+        <p class="eyebrow">PAVER PRICE POSITIONING</p>
+        <h1 id="positionHeading">Three numbers. Keep it simple.</h1>
+        <p class="lede">Paver comparison only. House washing, roof washing, pressure washing, gutters, and other exterior services are intentionally excluded from this screen.</p>
         <div class="snapshot-row">
-          <div><span>Total project area</span><strong id="posArea">0 sq ft</strong></div>
-          <div><span>Revive base service</span><strong id="posBase">$0</strong></div>
-          <div><span>Configured project</span><strong id="posConfigured">$0</strong></div>
+          <div><span>Paver area</span><strong id="posArea">0 sq ft</strong></div>
+          <div><span>Revive paver project</span><strong id="posBase">$0</strong></div>
+          <div><span>Effective Revive rate</span><strong id="posConfigured">—</strong></div>
         </div>
         <div id="positionCards" class="position-grid"></div>
-        <div class="callout"><b>Customer-facing rule:</b> Compare written scope, preparation, joint work, sealing system, warranty, aftercare, and verified credentials. Never present these illustrative rates as actual competitor quotes.</div>
+        <div class="callout"><b>Internal training labels:</b> “Chuck in the Truck” and “Top-Dollar Todd” are memory aids for the team. Do not use those nicknames with customers. Compare written scope, preparation, joint work, sealing system, warranty, aftercare, and verified credentials. Never present the illustrative rates as actual competitor quotes.</div>
       </section>
 
       <section id="screen-pricing" class="screen" aria-labelledby="pricingHeading">
@@ -256,52 +256,61 @@
         <p class="lede">Internal field guide. Final pricing and exceptions remain subject to management approval.</p>
         <div class="pricing-columns">
           <section class="panel compact">
-            <div class="panel-heading"><div><span class="step">01</span><h2>Base service</h2></div></div>
+            <div class="panel-heading"><div><span class="step">01</span><h2>Paver base service</h2></div></div>
             <div class="reference-list">
-              <div><span>Front driveway / walkway</span><strong>$1.50/sf</strong><small>Easier access / no screen enclosure</small></div>
-              <div><span>Lanai / back area</span><strong>$2.00/sf</strong><small>Tighter, detail-heavy work</small></div>
-              <div><span>Paver base minimum</span><strong>$1,199</strong><small>Applies to paver restoration/sealing base work; add-ons are added after the minimum</small></div>
+              <div><span>Front driveway / walkway</span><strong>$1.50/sq ft</strong><small>Easier access / no screen enclosure</small></div>
+              <div><span>Lanai / back area</span><strong>$2.00/sq ft</strong><small>Tighter, detail-heavy work</small></div>
+              <div><span>Paver base minimum</span><strong>$1,199</strong><small>Paver restoration/sealing base only. Exterior services do not trigger this minimum.</small></div>
             </div>
           </section>
           <section class="panel compact">
-            <div class="panel-heading"><div><span class="step">02</span><h2>Specialty upgrades</h2></div></div>
+            <div class="panel-heading"><div><span class="step">02</span><h2>Paver specialty upgrades</h2></div></div>
             <div class="reference-list two-col">
-              <div><span>Joint tone enhancement</span><strong>+$0.35–$0.50/sf</strong><small>Calculator default: $0.40/sf</small></div>
-              <div><span>Color revival</span><strong>+$0.45–$0.75/sf</strong><small>Calculator default: $0.60/sf</small></div>
-              <div><span>Restore bundle</span><strong>+$0.75–$1.10/sf</strong><small>Calculator default: $0.90/sf</small></div>
+              <div><span>Joint tone enhancement</span><strong>+$0.35–$0.50/sq ft</strong><small>Calculator default: $0.40/sq ft</small></div>
+              <div><span>Color revival</span><strong>+$0.45–$0.75/sq ft</strong><small>Calculator default: $0.60/sq ft</small></div>
+              <div><span>Restore bundle</span><strong>+$0.75–$1.10/sq ft</strong><small>Calculator default: $0.90/sq ft</small></div>
               <div><span>Accent border pop</span><strong>$295–$695</strong><small>Flat project price</small></div>
-              <div><span>Custom border</span><strong>$4–$7/lf</strong><small>Calculator default: $5.50/lf</small></div>
+              <div><span>Custom border</span><strong>$4–$7 / linear ft</strong><small>Calculator default: $5.50 / linear ft</small></div>
               <div><span>Spot blend / problem areas</span><strong>$150–$350</strong><small>Flat project price</small></div>
               <div><span>Designer accent finish</span><strong>$350–$750</strong><small>Flat project price</small></div>
               <div><span>Full metallic veil</span><strong>+$750–$1,500</strong><small>Designer fee</small></div>
-                            <div><span>Paver repair</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+              <div><span>Paver repair</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
             </div>
           </section>
         </div>
         <section class="panel compact pricing-wide">
-          <div class="panel-heading"><div><span class="step">03</span><h2>Exterior cleaning & add-ons</h2></div></div>
+          <div class="panel-heading"><div><span class="step">03</span><h2>Pressure washing & soft washing</h2></div></div>
           <div class="reference-list two-col">
-            <div><span>House Soft Wash</span><strong>$249–$699+</strong><small>Size tiers through 5,000 sq ft; 2-story +$75 guide; 3+ +$150 guide; custom review over 5,000 sq ft</small></div>
-            <div><span>Roof Soft Wash</span><strong>$0.30/sf • $599 min</strong><small>Add for pitch, tile, access, heavy condition, or unusual protection requirements</small></div>
-            <div><span>Driveway Pressure Cleaning</span><strong>$0.20/sf • $149 min</strong><small>Field starting guide</small></div>
-            <div><span>Sidewalk & Street Curb Cleaning</span><strong>$0.20/sf • $99 min</strong><small>Field starting guide</small></div>
-            <div><span>Lanai / Pool Deck Floor Cleaning</span><strong>$0.25/sf • $149 min</strong><small>Floor only; cage is separate</small></div>
-            <div><span>Pool Cage / Screen Enclosure</span><strong>$299 / $399</strong><small>Standard / large-tall guide; oversized or two-story custom</small></div>
-            <div><span>Gutter Interior Cleaning</span><strong>$1.00/lf • $149 min</strong><small>Story/access can require adjustment</small></div>
-            <div><span>One-Time Pool Clean</span><strong>$150</strong><small>Current Jobber saved service price</small></div>
-            <div><span>French Drain Cleanout</span><strong>From $249</strong><small>Current Jobber saved service starting price; adjust to scope</small></div>
-            <div><span>Fence / gutter brightening / stain treatments</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+            <div><span>House Soft Wash</span><strong>$249–$699+</strong><small>Size tiers through 5,000 sq ft. 2-story +$75 guide. 3+ story +$150 guide.</small></div>
+            <div><span>Roof Soft Wash</span><strong>$0.30/sq ft • $599 min</strong><small>Add for pitch, tile, access, heavy condition, or unusual protection requirements</small></div>
+            <div><span>Driveway Pressure Cleaning</span><strong>$0.20/sq ft • $149 min</strong><small>Field starting guide</small></div>
+            <div><span>Sidewalk & Street Curb Cleaning</span><strong>$0.20/sq ft • $99 min</strong><small>Field starting guide</small></div>
+            <div><span>Lanai / Pool Deck Floor Cleaning</span><strong>$0.25/sq ft • $149 min</strong><small>Floor only. Cage cleaning is separate.</small></div>
+            <div><span>Pool Cage / Screen Enclosure</span><strong>$299 / $399</strong><small>Standard / large-tall guide. Oversized or two-story is custom.</small></div>
           </div>
         </section>
         <section class="panel compact pricing-wide">
-          <div class="panel-heading"><div><span class="step">04</span><h2>Revive cleaning packages</h2></div></div>
+          <div class="panel-heading"><div><span class="step">04</span><h2>Exterior add-ons</h2></div></div>
           <div class="reference-list two-col">
-            <div><span>Entry Refresh</span><strong>$249</strong><small>Standard two-car driveway up to ~700 sf + front walkway + entry</small></div>
-            <div><span>Curb Appeal</span><strong>$449</strong><small>Standard one-story home up to ~2,000 sf + driveway + walkway + entry</small></div>
-            <div><span>Outdoor Living Refresh</span><strong>$349</strong><small>Standard pool cage + lanai/pool deck floor up to ~500 sf</small></div>
-            <div><span>Whole Property</span><strong>$849</strong><small>Standard one-story home + driveway/front + cage + rear floor up to ~1,000 sf</small></div>
+            <div><span>Gutter Interior Cleaning</span><strong>$1.00 / linear ft • $149 min</strong><small>Story and access can require adjustment</small></div>
+            <div><span>One-Time Pool Clean</span><strong>$150</strong><small>Current Jobber saved service price</small></div>
+            <div><span>French Drain Cleanout</span><strong>From $249</strong><small>Current Jobber saved service starting price. Adjust to scope.</small></div>
+            <div><span>Front Porch & Entry Cleaning</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+            <div><span>Concrete Cleaning & Protective Sealing</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+            <div><span>Exterior Gutter Brightening</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+            <div><span>Fence Cleaning / Staining</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+            <div><span>Rust / Efflorescence / Oil Treatment</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+          </div>
+        </section>
+        <section class="panel compact pricing-wide">
+          <div class="panel-heading"><div><span class="step">05</span><h2>Revive cleaning packages</h2></div></div>
+          <div class="reference-list two-col">
+            <div><span>Entry Refresh</span><strong>$249</strong><small>Standard two-car driveway up to ~700 sq ft + front walkway + entry</small></div>
+            <div><span>Curb Appeal</span><strong>$449</strong><small>Standard one-story home up to ~2,000 sq ft + driveway + walkway + entry</small></div>
+            <div><span>Outdoor Living Refresh</span><strong>$349</strong><small>Standard pool cage + lanai/pool deck floor up to ~500 sq ft</small></div>
+            <div><span>Whole Property</span><strong>$849</strong><small>Standard one-story home + driveway/front + cage + rear floor up to ~1,000 sq ft</small></div>
             <div><span>Roof & House Refresh</span><strong>Custom</strong><small>Price from home size, roof size, story count, access, pitch, material, and condition</small></div>
-            <div><span>Complete Home Care</span><strong>Custom</strong><small>Full-property package; price from actual scope</small></div>
+            <div><span>Complete Home Care</span><strong>Custom</strong><small>Full-property package. Price from actual scope.</small></div>
           </div>
         </section>
       </section>
@@ -309,16 +318,17 @@
       <section id="screen-sales" class="screen" aria-labelledby="salesHeading">
         <p class="eyebrow">SALES + FINANCING</p>
         <h1 id="salesHeading">Keep the conversation simple.</h1>
-        <p class="lede">Use TITUS for the numbers. Use your presentation and Jobber for the customer experience.</p>
+        <p class="lede">Use TITUS for the numbers. Use the presentation to explain value. Use Jobber for the official quote and financing.</p>
         <div class="sales-grid">
-          <article class="note-card"><span>01</span><h3>Bundle discount</h3><p>Use only when both front and back are being completed. Standard options are 0%, 5%, or 10%. Discounts of 12%, 15%, or 20% require manager approval. Specialty upgrades stay full price.</p></article>
-          <article class="note-card"><span>02</span><h3>Present the price</h3><p>Do not walk the customer through every calculator line. Confirm the scope, present the final project price confidently, and explain the value behind the process.</p></article>
-          <article class="note-card featured"><span>03</span><h3>Financing language</h3><p>“We do offer financing through Wisetack right inside the Jobber quote. Wisetack will show you the personalized options available to you. I don’t want to guess at your payment because the terms are personalized.”</p></article>
-          <article class="note-card"><span>04</span><h3>Financing guardrail</h3><p>Do not promise approval, a specific APR, a specific monthly payment, or a 0% option. The customer reviews their own offer inside Jobber.</p></article>
-          <article class="note-card"><span>05</span><h3>Price positioning</h3><p>Compare preparation, joint work, sealing system, written warranty, aftercare, and verified credentials. Do not make unsupported claims about another contractor.</p></article>
-          <article class="note-card"><span>06</span><h3>Paver minimum</h3><p>The $1,199 minimum applies to paver restoration/sealing base work. Exterior cleaning and add-ons use the service guide or approved project price.</p></article>
-          <article class="note-card"><span>07</span><h3>On-site upsell</h3><p>Ask what else the homeowner wants improved while Revive is already there. House wash, roof wash, gutters, cage cleaning, drainage, and stain treatment can be added without turning the conversation into a hard sell.</p></article>
-          <article class="note-card"><span>08</span><h3>Package guardrail</h3><p>Do not stack a saved package with the same individual services already included in that package. Add individual lines only for genuinely additional scope.</p></article>
+          <article class="note-card"><span>01</span><h3>Build the paver price</h3><p>Measure front and back, select only the paver upgrades the customer wants, and let TITUS apply the paver minimum and approved bundle discount.</p></article>
+          <article class="note-card"><span>02</span><h3>Use positioning correctly</h3><p>The Positioning screen is paver-only: Chuck in the Truck, Revive, and Top-Dollar Todd. Exterior services never affect those paver comparison numbers. The nicknames are internal only.</p></article>
+          <article class="note-card"><span>03</span><h3>Offer exterior add-ons</h3><p>Ask what else the homeowner wants improved while Revive is already there: house wash, roof wash, driveway cleaning, gutters, cage cleaning, drainage, stain treatment, or another approved service.</p></article>
+          <article class="note-card"><span>04</span><h3>Do not double-count packages</h3><p>If a Revive package already includes a service, do not add the same service again. Add individual lines only for genuinely additional scope.</p></article>
+          <article class="note-card"><span>05</span><h3>Present one final price</h3><p>Do not walk the customer through every calculator line. Confirm the complete scope and confidently present the final selling price for everything selected.</p></article>
+          <article class="note-card featured"><span>06</span><h3>Financing language</h3><p>“We do offer financing through Wisetack right inside the Jobber quote. Wisetack will show you the personalized options available to you. I don’t want to guess at your payment because the terms are personalized.”</p></article>
+          <article class="note-card"><span>07</span><h3>Discount guardrail</h3><p>The paver bundle discount applies only when both front and back paver areas are included. Standard options are 0%, 5%, or 10%. 12%, 15%, and 20% require manager approval. Exterior services are not automatically discounted.</p></article>
+          <article class="note-card"><span>08</span><h3>Paver minimum</h3><p>The $1,199 minimum applies only to paver restoration/sealing base work. House washing, roof washing, pressure washing, gutters, drainage, and other exterior work use their own pricing.</p></article>
+          <article class="note-card"><span>09</span><h3>Financing guardrail</h3><p>Do not promise approval, a specific APR, a specific monthly payment, or a 0% option. The customer reviews their own offer inside Jobber.</p></article>
         </div>
       </section>
     </main>
