@@ -161,3 +161,11 @@ V1.8 JOBBER HANDOFF CHECKS
 - Jobber draft creation does not email/send to the customer.
 - Existing Copy Jobber Summary fallback remains available.
 - Offline TITUS estimating remains available; Jobber handoff clearly requires internet.
+
+
+V1.8.1 PAIRING RELIABILITY CHECKS
+- Correct PIN returns a device token and immediately verifies /api/jobber/status using that token.
+- Device token is retained in memory even if browser storage APIs are restricted.
+- localStorage, sessionStorage, and a secure first-party cookie are attempted for 180-day device persistence.
+- Incorrect PIN surfaces the exact BAD_PIN message.
+- Backend pairing logs never include the PIN or full bearer token.

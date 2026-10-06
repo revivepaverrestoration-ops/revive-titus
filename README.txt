@@ -166,3 +166,11 @@ Required Render backend environment variables:
 - JOBBER_GRAPHQL_VERSION=2026-09-25
 
 Never place JOBBER_CLIENT_SECRET or Jobber OAuth tokens in config.js, app.js, GitHub, or the browser.
+
+
+V1.8.1 - IPAD PAIRING RELIABILITY FIX
+- Keeps the paired device token in memory immediately after PIN acceptance.
+- Adds localStorage, sessionStorage, and first-party cookie persistence fallbacks for Safari/iPadOS.
+- Verifies the newly paired token with the secure bridge before continuing to Jobber OAuth.
+- Shows the exact bridge/pairing failure instead of falling back to a generic not-paired message.
+- Adds safe server-side pairing diagnostics without logging the PIN or device token.

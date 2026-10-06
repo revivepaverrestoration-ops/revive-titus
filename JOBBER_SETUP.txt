@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8 - JOBBER CONNECTION SETUP
+REVIVE TITUS V1.8.1 - JOBBER CONNECTION SETUP
 ============================================
 
 TITUS app:

@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="styles.css">
   <title>Revive TITUS</title>
 </head>
-<body>
+<body class="customer-mode">
   <div class="app-shell">
     <header class="topbar">
       <div class="brand">
@@ -31,7 +31,7 @@
     </header>
 
     <main>
-      <section id="screen-quote" class="screen active" aria-labelledby="quoteHeading">
+      <section id="screen-quote" class="screen" aria-labelledby="quoteHeading">
         <div class="hero-grid">
           <div>
             <p class="eyebrow">FIELD QUOTE</p>
@@ -354,7 +354,7 @@
       </section>
 
 
-      <section id="screen-customer" class="screen customer-screen" aria-labelledby="customerHeading">
+      <section id="screen-customer" class="screen customer-screen active" aria-labelledby="customerHeading">
         <div class="customer-stage">
           <div class="customer-view-head">
             <div class="customer-view-brand">
@@ -470,11 +470,11 @@
     </dialog>
 
     <nav class="bottom-nav" aria-label="TITUS sections">
-      <button class="nav-btn active" data-screen="quote" type="button"><span class="nav-icon">$</span><span>Quote</span></button>
+      <button class="nav-btn" data-screen="quote" type="button"><span class="nav-icon">$</span><span>Quote</span></button>
       <button class="nav-btn" data-screen="positioning" type="button"><span class="nav-icon">↗</span><span>Positioning</span></button>
       <button class="nav-btn" data-screen="pricing" type="button"><span class="nav-icon">≡</span><span>Pricing</span></button>
       <button class="nav-btn" data-screen="sales" type="button"><span class="nav-icon">✓</span><span>Sales</span></button>
-      <button class="nav-btn customer-nav-btn" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
+      <button class="nav-btn customer-nav-btn active" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
     </nav>
   </div>
   <script src="config.js"></script>

@@ -22,6 +22,8 @@
   const numberFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits:0 });
   const JOBBER_API_BASE = String(window.TITUS_CONFIG?.jobberApiBase || '').replace(/\/$/, '');
   const DEVICE_TOKEN_KEY = 'revive-titus-jobber-device-token';
+  const DEVICE_TOKEN_COOKIE = 'revive_titus_jobber_device';
+  let memoryJobberDeviceToken = '';
   let currentJobberSelection = null;
   let currentJobberQuoteUrl = '';
 
@@ -441,12 +443,45 @@
     };
   }
 
+  function readCookie(name) {
+    try {
+      const target = `${name}=`;
+      const entry = document.cookie.split(';').map(v => v.trim()).find(v => v.startsWith(target));
+      return entry ? decodeURIComponent(entry.slice(target.length)) : '';
+    } catch (_) { return ''; }
+  }
+
   function jobberDeviceToken() {
-    try { return localStorage.getItem(DEVICE_TOKEN_KEY) || ''; } catch (_) { return ''; }
+    if (memoryJobberDeviceToken) return memoryJobberDeviceToken;
+    try {
+      const token = localStorage.getItem(DEVICE_TOKEN_KEY) || '';
+      if (token) return token;
+    } catch (_) {}
+    try {
+      const token = sessionStorage.getItem(DEVICE_TOKEN_KEY) || '';
+      if (token) return token;
+    } catch (_) {}
+    return readCookie(DEVICE_TOKEN_COOKIE);
   }
 
   function setJobberDeviceToken(token) {
-    try { localStorage.setItem(DEVICE_TOKEN_KEY, token); } catch (_) {}
+    const value = String(token || '').trim();
+    memoryJobberDeviceToken = value;
+    if (!value) return false;
+    let persisted = false;
+    try {
+      localStorage.setItem(DEVICE_TOKEN_KEY, value);
+      persisted = localStorage.getItem(DEVICE_TOKEN_KEY) === value || persisted;
+    } catch (_) {}
+    try {
+      sessionStorage.setItem(DEVICE_TOKEN_KEY, value);
+      persisted = sessionStorage.getItem(DEVICE_TOKEN_KEY) === value || persisted;
+    } catch (_) {}
+    try {
+      document.cookie = `${DEVICE_TOKEN_COOKIE}=${encodeURIComponent(value)}; Max-Age=${60 * 60 * 24 * 180}; Path=/; Secure; SameSite=Strict`;
+      persisted = readCookie(DEVICE_TOKEN_COOKIE) === value || persisted;
+    } catch (_) {}
+    return persisted;
   }
 
   async function jobberFetch(path, options = {}, allowPair = true) {
@@ -474,7 +509,8 @@
   async function pairJobberDevice() {
     const pin = window.prompt('Enter the TITUS setup PIN for this iPad. You only need to do this once.');
     if (!pin) return false;
-    if (!JOBBER_API_BASE) return false;
+    if (!JOBBER_API_BASE) throw new Error('The TITUS Jobber bridge URL is not configured.');
+
     let response;
     try {
       response = await fetch(`${JOBBER_API_BASE}/api/pair`, {
@@ -483,15 +519,36 @@
         body:JSON.stringify({ pin: String(pin).trim() })
       });
     } catch (_) {
-      window.alert('Could not reach the TITUS Jobber bridge.');
-      return false;
+      throw new Error('Could not reach the TITUS Jobber bridge. Check the iPad internet connection and try again.');
     }
+
     const body = await response.json().catch(() => ({}));
     if (!response.ok || !body.deviceToken) {
-      window.alert(body.message || 'That setup PIN did not work.');
-      return false;
+      throw new Error(body.message || 'That TITUS setup PIN did not work.');
     }
-    setJobberDeviceToken(body.deviceToken);
+
+    const token = String(body.deviceToken || '').trim();
+    const persisted = setJobberDeviceToken(token);
+
+    let verifyResponse;
+    try {
+      verifyResponse = await fetch(`${JOBBER_API_BASE}/api/jobber/status`, {
+        method:'GET',
+        headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${token}` }
+      });
+    } catch (_) {
+      throw new Error('The PIN was accepted, but TITUS could not verify this iPad with the Jobber bridge. Try again once.');
+    }
+    const verifyBody = await verifyResponse.json().catch(() => ({}));
+    if (!verifyResponse.ok) {
+      throw new Error(verifyBody.message || 'The PIN was accepted, but the bridge did not recognize this iPad.');
+    }
+
+    if (!persisted) {
+      setJobberStatus('This iPad is paired for this session. Safari storage is restricted, so the setup PIN may be required again after closing TITUS.', 'warn');
+    } else {
+      setJobberStatus('This iPad is paired. Connecting to Jobber…', 'good');
+    }
     return true;
   }
 

@@ -159,18 +159,27 @@ app.get('/health', async (req, res) => {
 
 app.post('/api/pair', async (req, res) => {
   try {
-    if (!TITUS_PAIRING_PIN) return jsonError(res, 503, 'PAIRING_NOT_CONFIGURED', 'TITUS device pairing is not configured yet.');
+    if (!TITUS_PAIRING_PIN) {
+      console.warn('Pairing rejected: TITUS_PAIRING_PIN is not configured.');
+      return jsonError(res, 503, 'PAIRING_NOT_CONFIGURED', 'TITUS device pairing is not configured yet.');
+    }
     const attemptKey = `titus:pair-attempt:${sha256(req.ip || 'unknown')}`;
     const attempts = Number(await redis.get(attemptKey) || 0);
-    if (attempts >= 6) return jsonError(res, 429, 'PAIRING_LOCKED', 'Too many setup PIN attempts. Wait 10 minutes and try again.');
+    if (attempts >= 6) {
+      console.warn('Pairing locked for IP hash', sha256(req.ip || 'unknown').slice(0, 10));
+      return jsonError(res, 429, 'PAIRING_LOCKED', 'Too many setup PIN attempts. Wait 10 minutes and try again.');
+    }
     if (!secureEqual(req.body?.pin || '', TITUS_PAIRING_PIN)) {
       const next = await redis.incr(attemptKey);
       if (next === 1) await redis.expire(attemptKey, 600);
+      console.warn('Pairing failed: bad PIN for IP hash', sha256(req.ip || 'unknown').slice(0, 10));
       return jsonError(res, 403, 'BAD_PIN', 'That TITUS setup PIN is not correct.');
     }
     await redis.del(attemptKey).catch(() => {});
     const token = b64url(crypto.randomBytes(32));
-    await redis.set(`titus:device:${sha256(token)}`, '1', { EX: DEVICE_TTL_SECONDS });
+    const tokenHash = sha256(token);
+    await redis.set(`titus:device:${tokenHash}`, '1', { EX: DEVICE_TTL_SECONDS });
+    console.log('Pairing succeeded for device', tokenHash.slice(0, 10));
     res.json({ ok: true, deviceToken: token, expiresInDays: 180 });
   } catch (err) {
     jsonError(res, 503, 'PAIR_FAILED', err.message);
