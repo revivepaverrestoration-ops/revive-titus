@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.6.1</span>
+        <span class="version">V1.7</span>
       </div>
     </header>
 
@@ -352,6 +352,82 @@
           <article class="note-card"><span>09</span><h3>Financing guardrail</h3><p>Do not promise approval, a specific APR, a specific monthly payment, or a 0% option. The customer reviews their own offer inside Jobber.</p></article>
         </div>
       </section>
+
+
+      <section id="screen-customer" class="screen customer-screen" aria-labelledby="customerHeading">
+        <div class="customer-stage">
+          <div class="customer-view-head">
+            <div class="customer-view-brand">
+              <img src="revive-logo.png" alt="Revive Paver Restoration">
+              <div>
+                <p class="eyebrow">PROJECT REVIEW</p>
+                <h1 id="customerHeading">Your Revive project.</h1>
+              </div>
+            </div>
+            <span class="customer-ready-badge">Prepared for you</span>
+          </div>
+
+          <div class="customer-intro">
+            <div>
+              <span>Prepared for</span>
+              <strong id="customerViewName">Your project</strong>
+            </div>
+            <div>
+              <span>Project location</span>
+              <strong id="customerViewAddress">Project address</strong>
+            </div>
+          </div>
+
+          <div class="customer-review-grid">
+            <section class="customer-scope-card">
+              <div class="customer-section-heading">
+                <span class="customer-section-number">01</span>
+                <div>
+                  <p class="eyebrow">YOUR SCOPE</p>
+                  <h2>What Revive is taking care of.</h2>
+                </div>
+              </div>
+              <div id="customerScopeList" class="customer-scope-list"></div>
+            </section>
+
+            <aside class="customer-investment-card">
+              <p class="eyebrow">FINAL PROJECT INVESTMENT</p>
+              <strong id="customerFinalPrice" class="customer-final-price">$0</strong>
+              <p class="customer-investment-copy">One complete price for the selected Revive project scope shown on this page.</p>
+              <div class="customer-financing">
+                <b>Financing available</b>
+                <span>Personalized Wisetack options are available through the official Jobber quote.</span>
+              </div>
+            </aside>
+          </div>
+
+          <section id="customerComparisonSection" class="customer-comparison-section" hidden>
+            <div class="customer-section-heading">
+              <span class="customer-section-number">02</span>
+              <div>
+                <p class="eyebrow">PAVER VALUE COMPARISON</p>
+                <h2>See your paver project in context.</h2>
+              </div>
+            </div>
+            <p class="customer-comparison-lede">These examples compare paver pricing only. Exterior cleaning and other add-ons are intentionally excluded from the comparison.</p>
+            <div id="customerComparisonCards" class="customer-comparison-grid"></div>
+            <p class="customer-example-note">Basic and premium examples are illustrative pricing references, not quotes from a specific competitor. Actual scope, preparation, products, warranty, and workmanship can differ significantly.</p>
+          </section>
+
+          <div class="customer-confidence-grid">
+            <article id="customerWarrantyCard" class="customer-confidence-card" hidden>
+              <span>REVIVE PROTECTION</span>
+              <h3>3-Year Limited Sealer Performance Warranty</h3>
+              <p>Qualifying residential paver sealing projects include Revive's limited sealer performance warranty. Ask about the 5-Year Recurring Revive Protection Plan option.</p>
+            </article>
+            <article class="customer-confidence-card">
+              <span>WHAT HAPPENS NEXT</span>
+              <h3>Review. Approve. Schedule.</h3>
+              <p>Your estimator will prepare the official Jobber quote with the approved scope, final pricing, payment options, and applicable project terms.</p>
+            </article>
+          </div>
+        </div>
+      </section>
     </main>
 
     <dialog id="quoteSummaryDialog" class="summary-dialog">
@@ -383,6 +459,7 @@
       <button class="nav-btn" data-screen="positioning" type="button"><span class="nav-icon">↗</span><span>Positioning</span></button>
       <button class="nav-btn" data-screen="pricing" type="button"><span class="nav-icon">≡</span><span>Pricing</span></button>
       <button class="nav-btn" data-screen="sales" type="button"><span class="nav-icon">✓</span><span>Sales</span></button>
+      <button class="nav-btn customer-nav-btn" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
     </nav>
   </div>
   <script src="pricing-engine.js"></script>

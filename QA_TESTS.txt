@@ -125,3 +125,18 @@ V1.6.1 BUNDLE DISCOUNT SELECTOR CHECKS
 - 12%, 15%, and 20% still require manager confirmation before applying.
 - Declined manager approval restores the previously approved discount.
 - Pricing engine remains unchanged.
+
+
+V1.7 CUSTOMER VIEW CHECKS
+- Fifth bottom navigation button opens Customer View.
+- Customer View shows customer name, address, current selected scope, and one final project investment.
+- Customer scope intentionally omits internal line-item prices, paver minimum adjustment wording, manager approval wording, and internal nicknames.
+- Paver comparison uses only paver area and paverProjectTotal; exterior services do not affect the comparison.
+- Basic Service Example uses $1.00/sq ft.
+- Revive Professional Restoration uses actual paverProjectTotal and actual effective paver rate.
+- Premium Market Example uses $3.50/sq ft.
+- Paver comparison and warranty card are hidden for exterior-only projects.
+- Final Project Investment still includes every selected paver, upgrade, exterior service, and package.
+- Customer Mode hides internal nav tabs, connection badge, version badge, and TITUS Sales System text.
+- Exit Customer View requires confirmation and returns to Quote.
+- V1.7 service-worker cache forces installed iPads to refresh the new screen.

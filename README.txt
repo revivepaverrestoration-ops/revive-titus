@@ -124,3 +124,14 @@ V1.6.1
 - 12%, 15%, and 20% remain manager-approval selections and retain the confirmation guardrail.
 - Hidden select remains as the pricing/state source of truth for compatibility.
 - Service-worker cache bumped so installed iPad PWAs receive the selector fix.
+
+
+V1.7
+- Added a fifth bottom navigation page: Customer.
+- Customer View displays only customer-safe project scope, final project investment, financing note, and applicable warranty messaging.
+- Added customer-facing paver value comparison using professional labels: Basic Service Example, Revive Professional Restoration, and Premium Market Example.
+- Customer paver comparison is hidden automatically when no paver restoration base scope is selected.
+- Exterior services never affect the paver comparison numbers.
+- Entering Customer View hides the internal navigation tabs and internal status/version information. The single bottom control exits Customer View after confirmation.
+- No internal pricing guide, manager notes, discount approval language, estimator calculations, or Chuck/Todd nicknames are shown in Customer View.
+- Updated offline service-worker cache to V1.7.

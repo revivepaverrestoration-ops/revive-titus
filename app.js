@@ -87,6 +87,7 @@
     $('posBase').textContent = money.format(q.paverProjectTotal);
     $('posConfigured').textContent = q.effectiveRate === null ? '—' : `$${rateFmt.format(q.effectiveRate)} / sq ft`;
     renderPositioning(q);
+    renderCustomerView(q);
     syncStoryButtons();
     syncDiscountButtons();
     saveState();
@@ -109,6 +110,57 @@
         <div class="pos-total">${money.format(c[3])}</div>
         <div class="pos-rate">${c[2]}</div>
       </article>`).join('');
+  }
+
+  function customerScopeRows(q) {
+    const rows = [];
+    if (q.front > 0) rows.push(['Front Driveway Paver Restoration & Sealing', `${numberFmt.format(q.front)} sq ft`]);
+    if (q.back > 0) rows.push(['Lanai & Pool Deck Paver Restoration & Sealing', `${numberFmt.format(q.back)} sq ft`]);
+    selectedPaverUpgrades().forEach(([name, qty]) => rows.push([name, qty]));
+    selectedExteriorServices(q).forEach(([name, qty]) => rows.push([name, qty]));
+    return rows;
+  }
+
+  function renderCustomerView(q) {
+    const customer = $('customerName').value.trim() || 'Your project';
+    const address = $('projectAddress').value.trim() || 'Project address';
+    $('customerViewName').textContent = customer;
+    $('customerViewAddress').textContent = address;
+    $('customerFinalPrice').textContent = money.format(q.finalPrice);
+
+    const rows = customerScopeRows(q);
+    $('customerScopeList').innerHTML = rows.length ? rows.map(([name, qty]) => `
+      <div class="customer-scope-item">
+        <span class="customer-check">✓</span>
+        <div><b>${escapeHtml(name)}</b><small>${escapeHtml(qty)}</small></div>
+      </div>`).join('') : `
+      <div class="customer-scope-empty">
+        <b>Your project scope will appear here.</b>
+        <span>Your estimator is still building the project.</span>
+      </div>`;
+
+    const hasPavers = q.hasPaverBase && q.totalArea > 0;
+    $('customerComparisonSection').hidden = !hasPavers;
+    $('customerWarrantyCard').hidden = !hasPavers;
+    if (hasPavers) {
+      const low = q.totalArea * 1;
+      const high = q.totalArea * 3.5;
+      const reviveRate = q.effectiveRate === null ? '—' : `$${rateFmt.format(q.effectiveRate)} / sq ft`;
+      const cards = [
+        ['Basic Service Example', '$1.00 / sq ft', low, 'Illustrative entry-level paver pricing reference.'],
+        ['Revive Professional Restoration', reviveRate, q.paverProjectTotal, 'Your actual Revive paver restoration scope and selected paver upgrades.'],
+        ['Premium Market Example', '$3.50 / sq ft', high, 'Illustrative higher-end paver pricing reference.']
+      ];
+      $('customerComparisonCards').innerHTML = cards.map((c, i) => `
+        <article class="customer-comparison-card${i === 1 ? ' revive' : ''}">
+          <span>${escapeHtml(c[0])}</span>
+          <strong>${money.format(c[2])}</strong>
+          <b>${escapeHtml(c[1])}</b>
+          <p>${escapeHtml(c[3])}</p>
+        </article>`).join('');
+    } else {
+      $('customerComparisonCards').innerHTML = '';
+    }
   }
 
   function saveState() {
@@ -364,8 +416,12 @@
   }
 
   function showScreen(name) {
+    const customerMode = name === 'customer';
+    document.body.classList.toggle('customer-mode', customerMode);
     document.querySelectorAll('.screen').forEach(el => el.classList.toggle('active', el.id === `screen-${name}`));
     document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.screen === name));
+    $('customerNavLabel').textContent = customerMode ? 'Exit Customer View' : 'Customer';
+    if (customerMode) renderCustomerView(calculate());
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
@@ -403,7 +459,14 @@
     $('houseStories').value = btn.dataset.story;
     render();
   }));
-  document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => showScreen(btn.dataset.screen)));
+  document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => {
+    if (btn.dataset.screen === 'customer' && document.body.classList.contains('customer-mode')) {
+      const exit = window.confirm('Exit customer view and return to the internal quote screen?');
+      if (exit) showScreen('quote');
+      return;
+    }
+    showScreen(btn.dataset.screen);
+  }));
   window.addEventListener('online', updateConnection);
   window.addEventListener('offline', updateConnection);
 
