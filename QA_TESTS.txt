@@ -1,4 +1,4 @@
-REVIVE TITUS V1.5 - QA TESTS
+REVIVE TITUS V1.5.1 - QA TESTS
 
 AUTOMATED CHECK RESULTS
 - 370 pricing-engine checks passed.
@@ -83,3 +83,14 @@ STATE / OFFLINE
 56. V1.5 reads old V1.4 saved quote state, then saves under revive-titus-v1-5.
 57. Offline cache name is revive-titus-v1-5-positioning.
 58. Version badge reads V1.5.
+
+
+V1.5.1 STORY SELECTOR CHECKS
+59. House Soft Wash story selector shows three visible buttons: 1 story, 2 stories, 3+ stories.
+60. Default state highlights 1 story.
+61. Tapping 2 stories updates houseStories to 2 and adds the existing $75 story adjustment.
+62. Tapping 3+ stories updates houseStories to 3 and adds the existing $150 story adjustment.
+63. Starting a new quote resets the story selector to 1 story.
+64. Existing saved quote state keeps the previously selected story count and the correct button is highlighted.
+65. Offline cache name is revive-titus-v1-5-1-story-buttons.
+66. Version badge reads V1.5.1.

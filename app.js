@@ -21,6 +21,15 @@
   const rateFmt = new Intl.NumberFormat('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
   const numberFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits:0 });
 
+  function syncStoryButtons() {
+    const selected = String($('houseStories').value || '1');
+    document.querySelectorAll('.story-btn').forEach(btn => {
+      const active = btn.dataset.story === selected;
+      btn.classList.toggle('active', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
   function todayISO() {
     const d = new Date();
     const y = d.getFullYear();
@@ -69,6 +78,7 @@
     $('posBase').textContent = money.format(q.paverProjectTotal);
     $('posConfigured').textContent = q.effectiveRate === null ? '—' : `$${rateFmt.format(q.effectiveRate)} / sq ft`;
     renderPositioning(q);
+    syncStoryButtons();
     saveState();
   }
 
@@ -360,6 +370,10 @@
   $('doneSummaryBtn').addEventListener('click', closeSummary);
   $('copySummaryBtn').addEventListener('click', copySummary);
   $('quoteSummaryDialog').addEventListener('click', (event) => { if (event.target === $('quoteSummaryDialog')) closeSummary(); });
+  document.querySelectorAll('.story-btn').forEach(btn => btn.addEventListener('click', () => {
+    $('houseStories').value = btn.dataset.story;
+    render();
+  }));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.addEventListener('click', () => showScreen(btn.dataset.screen)));
   window.addEventListener('online', updateConnection);
   window.addEventListener('offline', updateConnection);

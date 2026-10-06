@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.5</span>
+        <span class="version">V1.5.1</span>
       </div>
     </header>
 
@@ -135,7 +135,14 @@
                     <span><b>House Soft Wash</b><small>Size tier pricing. 5,000+ sq ft requires manager/custom review.</small></span>
                     <div class="service-controls">
                       <div class="mini-input"><input id="houseWashSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div>
-                      <select id="houseStories" class="mini-select" aria-label="House stories"><option value="1">1 story</option><option value="2">2 stories</option><option value="3">3+ stories</option></select>
+                      <div class="story-toggle" role="radiogroup" aria-label="House stories">
+                        <button type="button" class="story-btn active" data-story="1" aria-pressed="true">1 story</button>
+                        <button type="button" class="story-btn" data-story="2" aria-pressed="false">2 stories</button>
+                        <button type="button" class="story-btn" data-story="3" aria-pressed="false">3+ stories</button>
+                        <select id="houseStories" class="story-select-fallback" aria-label="House stories">
+                          <option value="1">1 story</option><option value="2">2 stories</option><option value="3">3+ stories</option>
+                        </select>
+                      </div>
                       <div class="mini-input currency"><span>+$</span><input id="houseWashAdjustmentFlat" type="number" inputmode="decimal" min="0" step="1" placeholder="0"></div>
                       <strong id="houseWashCalc" class="service-price">$0</strong>
                     </div>

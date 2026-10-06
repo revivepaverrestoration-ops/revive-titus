@@ -1,4 +1,4 @@
-REVIVE TITUS SALES SYSTEM - PWA V1.5
+REVIVE TITUS SALES SYSTEM - PWA V1.5.1
 
 WHAT THIS IS
 A standalone, offline-first field quoting app for Revive Paver Restoration. It is designed for iPad, uses protected pricing logic instead of spreadsheet cells, and can be installed to the Home Screen after hosting over HTTPS.
@@ -100,3 +100,10 @@ V1.5 CHANGES
 - Reorganized Pricing Guide into Paver Base, Paver Upgrades, Pressure/Soft Washing, Exterior Add-ons, and Packages.
 - Simplified Sales screen and clarified bundle discount, paver minimum, package, financing, and exterior-service rules.
 - Updated offline cache and local-storage version to V1.5 while retaining V1.4 quote-state migration.
+
+
+V1.5.1 CHANGES
+- Replaced the House Soft Wash story-count dropdown with three large visible buttons: 1 story, 2 stories, 3+ stories.
+- Removes the browser/iPad native dropdown contrast issue where 2-story and 3+ story choices could be unreadable.
+- Pricing logic is unchanged: 1 story +$0, 2 stories +$75, 3+ stories +$150.
+- Updated offline cache to force the story-selector UI update.
