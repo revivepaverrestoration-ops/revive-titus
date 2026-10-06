@@ -1,0 +1,52 @@
+REVIVE TITUS V1.8 - JOBBER CONNECTION SETUP
+============================================
+
+TITUS app:
+https://titus.revivepaverrestoration.com
+
+Secure Render bridge:
+https://revive-titus-jobber.onrender.com
+
+Jobber OAuth callback URL (enter this EXACTLY in Jobber Developer Center):
+https://revive-titus-jobber.onrender.com/api/jobber/callback
+
+Suggested Jobber Developer App name:
+Revive TITUS
+
+Suggested Manage App URL:
+https://titus.revivepaverrestoration.com
+
+Jobber permissions/scopes TITUS needs:
+- Clients: read
+- Properties: read
+- Products & Services: read
+- Quotes: read/write (or the equivalent quote read + quote write permissions shown in Developer Center)
+
+TITUS does NOT need permission to create clients in V1.8. That is intentional to prevent duplicate customers.
+
+Render service environment variables:
+- REDIS_URL (already wired to the TITUS secure store)
+- APP_ORIGINS=https://titus.revivepaverrestoration.com,https://revive-titus.onrender.com
+- JOBBER_REDIRECT_URI=https://revive-titus-jobber.onrender.com/api/jobber/callback
+- JOBBER_GRAPHQL_VERSION=2026-09-25
+- MAX_CLIENT_SCAN=1000
+- JOBBER_CLIENT_ID=<from Jobber Developer Center>
+- JOBBER_CLIENT_SECRET=<enter directly in Render; NEVER place it in GitHub or TITUS browser files>
+- TITUS_PAIRING_PIN=<choose a private setup PIN used once per company iPad>
+
+Important security rule:
+Do not paste JOBBER_CLIENT_SECRET into ChatGPT, GitHub, app.js, config.js, or any browser file. Enter it directly into the Render service environment-variable screen.
+
+V1.8 workflow:
+1. Technician builds estimate in TITUS.
+2. Review & Send -> Send to Jobber.
+3. First use on each iPad asks for the TITUS setup PIN once.
+4. First company connection routes an admin through Jobber OAuth once.
+5. TITUS finds the EXISTING Jobber client/property.
+6. Ambiguous matches require technician selection.
+7. No match creates nothing; verify/create the customer in Jobber first.
+8. TITUS creates a DRAFT quote only.
+9. Technician taps Open Jobber Quote, reviews the official quote/financing, then sends from Jobber.
+
+Testing storage note:
+The current Render Key Value store is on the FREE plan for initial testing. Render free Key Value is not disk-persistent; a store restart/upgrade can require reconnecting Jobber and re-pairing iPads. After end-to-end testing passes, upgrade the token store to a persistent paid plan before relying on it in production.

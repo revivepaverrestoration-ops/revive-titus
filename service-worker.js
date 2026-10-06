@@ -1,6 +1,6 @@
-const CACHE = 'revive-titus-v1-7-customer-view';
+const CACHE = 'revive-titus-v1-8-jobber-handoff';
 const ASSETS = [
-  './', './index.html', './styles.css', './pricing-engine.js', './app.js', './manifest.webmanifest',
+  './', './index.html', './styles.css', './config.js', './pricing-engine.js', './app.js', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {

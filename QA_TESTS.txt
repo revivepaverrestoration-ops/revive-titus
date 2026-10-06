@@ -140,3 +140,24 @@ V1.7 CUSTOMER VIEW CHECKS
 - Customer Mode hides internal nav tabs, connection badge, version badge, and TITUS Sales System text.
 - Exit Customer View requires confirmation and returns to Quote.
 - V1.7 service-worker cache forces installed iPads to refresh the new screen.
+
+
+V1.8 JOBBER HANDOFF CHECKS
+==========================
+- V1.8 static JavaScript syntax passes.
+- Jobber bridge JavaScript syntax passes.
+- Jobber OAuth Client Secret exists only in Render environment variables, never browser files.
+- Device pairing token is required before Jobber match/quote endpoints can be used.
+- OAuth authorization uses state + PKCE S256 and server-side code exchange.
+- Refresh token rotation overwrites the stored refresh token.
+- Exact email/phone/address matches rank above name-only matches.
+- Ambiguous client matches require technician selection.
+- Multiple properties require technician selection unless the address uniquely matches.
+- No client found creates NOTHING; technician is sent back to Jobber to verify/create client.
+- Draft quote idempotency prevents a fast double-tap from creating the same draft twice within 24 hours.
+- Jobber handoff uses one exact paver-base price line so TITUS paver minimum/bundle discounts do not affect exterior add-ons.
+- Exterior services are sent as separate exact-price lines.
+- Jobber tax/setting differences are detected after draft creation and surfaced as a total mismatch warning.
+- Jobber draft creation does not email/send to the customer.
+- Existing Copy Jobber Summary fallback remains available.
+- Offline TITUS estimating remains available; Jobber handoff clearly requires internet.

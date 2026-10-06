@@ -1,0 +1,15 @@
+{
+  "name": "revive-titus-jobber-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node jobber-api-server.js",
+    "check": "node --check jobber-api-server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "redis": "^5.8.2"
+  }
+}

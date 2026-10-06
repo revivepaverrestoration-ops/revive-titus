@@ -135,3 +135,34 @@ V1.7
 - Entering Customer View hides the internal navigation tabs and internal status/version information. The single bottom control exits Customer View after confirmation.
 - No internal pricing guide, manager notes, discount approval language, estimator calculations, or Chuck/Todd nicknames are shown in Customer View.
 - Updated offline service-worker cache to V1.7.
+
+
+V1.8 - SECURE JOBBER DRAFT HANDOFF
+==================================
+- Review & Send can now hand a TITUS estimate to a secure Jobber bridge.
+- TITUS matches an existing Jobber client using email, phone, address, and name.
+- TITUS never creates a new client automatically, preventing accidental duplicates.
+- Multiple client/property matches require technician selection.
+- Creates a DRAFT Jobber quote only. It does not email/send the quote to the customer.
+- Returns an Open Jobber Quote button so the estimator can review the draft in Jobber.
+- Quote line items use exact TITUS prices; paver discount/minimum is baked only into the paver base line.
+- Exterior add-ons remain separate lines.
+- The bridge reuses matching Jobber Products & Services descriptions when available.
+- Device pairing protects write actions so a public copy of the PWA cannot freely create Jobber quotes.
+- Jobber OAuth Client Secret and refresh tokens stay server-side and are never stored in the PWA.
+- Estimating remains offline-capable; sending to Jobber requires internet.
+
+Backend files in this repo:
+- jobber-api-server.js
+- package.json
+
+Required Render backend environment variables:
+- REDIS_URL
+- JOBBER_CLIENT_ID
+- JOBBER_CLIENT_SECRET
+- JOBBER_REDIRECT_URI
+- TITUS_PAIRING_PIN
+- APP_ORIGINS=https://titus.revivepaverrestoration.com,https://revive-titus.onrender.com
+- JOBBER_GRAPHQL_VERSION=2026-09-25
+
+Never place JOBBER_CLIENT_SECRET or Jobber OAuth tokens in config.js, app.js, GitHub, or the browser.

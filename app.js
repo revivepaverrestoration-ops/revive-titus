@@ -20,6 +20,11 @@
   const money = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 });
   const rateFmt = new Intl.NumberFormat('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
   const numberFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits:0 });
+  const JOBBER_API_BASE = String(window.TITUS_CONFIG?.jobberApiBase || '').replace(/\/$/, '');
+  const DEVICE_TOKEN_KEY = 'revive-titus-jobber-device-token';
+  let currentJobberSelection = null;
+  let currentJobberQuoteUrl = '';
+
 
   function syncStoryButtons() {
     const selected = String($('houseStories').value || '1');
@@ -359,6 +364,8 @@
     $('summaryLines').innerHTML = summaryLinesHtml(q);
     $('summaryFinalPrice').textContent = money.format(q.finalPrice);
     $('copyStatus').textContent = '';
+    resetJobberResult();
+    refreshJobberStatus();
     const dialog = $('quoteSummaryDialog');
     if (typeof dialog.showModal === 'function') dialog.showModal();
     else dialog.setAttribute('open','');
@@ -393,6 +400,278 @@
     } catch (_) {
       status.textContent = 'Copy was blocked by the browser. Select the summary manually or try again while online.';
     }
+  }
+
+  function buildJobberLines(q) {
+    const lines = [];
+    if (q.hasPaverBase) {
+      let name = 'Complete Paver Restoration & Sealing';
+      const details = [];
+      if (q.front > 0 && q.back <= 0) name = 'Front Driveway Paver Restoration & Sealing';
+      else if (q.back > 0 && q.front <= 0) name = 'Lanai & Pool Deck Paver Restoration & Sealing';
+      if (q.front > 0) details.push(`Front: ${numberFmt.format(q.front)} sq ft`);
+      if (q.back > 0) details.push(`Lanai / back: ${numberFmt.format(q.back)} sq ft`);
+      if (q.bundleDiscount > 0) details.push(`Paver bundle discount: ${Math.round(q.bundleDiscount * 100)}%${q.bundleDiscount > RULES.standardBundleDiscountMax ? ' (manager approved)' : ''}`);
+      if (q.paverMinimumAdjustment > 0) details.push('$1,199 paver project minimum applied');
+      lines.push({ name, detail: details.join(' • '), amount: q.paverBaseFinal });
+    }
+    selectedPaverUpgrades().forEach(([name, qty, price]) => lines.push({ name, detail: qty, amount: price }));
+    selectedExteriorServices(q).forEach(([name, qty, price]) => lines.push({ name, detail: qty, amount: price }));
+    return lines.filter(line => Number(line.amount) > 0);
+  }
+
+  function jobberQuoteTitle(q) {
+    const exterior = selectedExteriorServices(q);
+    const upgrades = selectedPaverUpgrades();
+    if (q.hasPaverBase && exterior.length) return 'Paver Restoration & Exterior Services';
+    if (q.hasPaverBase) {
+      if (q.front > 0 && q.back <= 0) return 'Front Driveway Paver Restoration & Sealing';
+      if (q.back > 0 && q.front <= 0) return 'Lanai & Pool Deck Paver Restoration & Sealing';
+      return 'Complete Paver Restoration & Sealing';
+    }
+    if (exterior.length === 1 && !upgrades.length) return exterior[0][0];
+    return 'Revive Exterior Services';
+  }
+
+  function jobberPayload(q) {
+    return {
+      title: jobberQuoteTitle(q),
+      expectedTotal: Number(q.finalPrice.toFixed(2)),
+      lines: buildJobberLines(q)
+    };
+  }
+
+  function jobberDeviceToken() {
+    try { return localStorage.getItem(DEVICE_TOKEN_KEY) || ''; } catch (_) { return ''; }
+  }
+
+  function setJobberDeviceToken(token) {
+    try { localStorage.setItem(DEVICE_TOKEN_KEY, token); } catch (_) {}
+  }
+
+  async function jobberFetch(path, options = {}, allowPair = true) {
+    if (!JOBBER_API_BASE) throw new Error('The TITUS Jobber bridge URL is not configured.');
+    const headers = { 'Content-Type':'application/json', ...(options.headers || {}) };
+    const token = jobberDeviceToken();
+    if (token) headers.Authorization = `Bearer ${token}`;
+    let response;
+    try {
+      response = await fetch(`${JOBBER_API_BASE}${path}`, { ...options, headers });
+    } catch (_) {
+      throw new Error('Could not reach the TITUS Jobber bridge. Check internet service and try again.');
+    }
+    let body = {};
+    try { body = await response.json(); } catch (_) {}
+    if (response.status === 401 && body.code === 'PAIR_REQUIRED' && allowPair) {
+      const paired = await pairJobberDevice();
+      if (!paired) throw new Error('This iPad must be paired before it can send quotes to Jobber.');
+      return jobberFetch(path, options, false);
+    }
+    if (!response.ok || body.ok === false) throw new Error(body.message || `Jobber bridge returned HTTP ${response.status}.`);
+    return body;
+  }
+
+  async function pairJobberDevice() {
+    const pin = window.prompt('Enter the TITUS setup PIN for this iPad. You only need to do this once.');
+    if (!pin) return false;
+    if (!JOBBER_API_BASE) return false;
+    let response;
+    try {
+      response = await fetch(`${JOBBER_API_BASE}/api/pair`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json' },
+        body:JSON.stringify({ pin: String(pin).trim() })
+      });
+    } catch (_) {
+      window.alert('Could not reach the TITUS Jobber bridge.');
+      return false;
+    }
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok || !body.deviceToken) {
+      window.alert(body.message || 'That setup PIN did not work.');
+      return false;
+    }
+    setJobberDeviceToken(body.deviceToken);
+    return true;
+  }
+
+  function setJobberStatus(message, tone = '') {
+    const el = $('jobberStatus');
+    el.textContent = message || '';
+    el.className = `jobber-status${tone ? ` ${tone}` : ''}`;
+  }
+
+  function clearJobberChoices() {
+    const box = $('jobberChoices');
+    box.innerHTML = '';
+    box.hidden = true;
+  }
+
+  function resetJobberResult() {
+    currentJobberSelection = null;
+    currentJobberQuoteUrl = '';
+    $('openJobberQuoteBtn').hidden = true;
+    $('sendJobberBtn').hidden = false;
+    $('sendJobberBtn').disabled = false;
+    $('sendJobberBtn').textContent = 'Send to Jobber';
+    clearJobberChoices();
+  }
+
+  async function refreshJobberStatus() {
+    if (!navigator.onLine) {
+      setJobberStatus('Offline. Build the estimate now and send it to Jobber when this iPad is back online.', 'warn');
+      return;
+    }
+    if (!jobberDeviceToken()) {
+      setJobberStatus('Jobber is ready for setup. Tap Send to Jobber to pair this iPad.', 'muted');
+      return;
+    }
+    try {
+      const status = await jobberFetch('/api/jobber/status', { method:'GET' }, false);
+      if (status.connected) setJobberStatus(`Connected to Jobber${status.account?.name ? ` • ${status.account.name}` : ''}.`, 'good');
+      else setJobberStatus('Jobber authorization is required. Tap Send to Jobber to connect.', 'warn');
+    } catch (err) {
+      if (/paired/i.test(err.message)) setJobberStatus('Tap Send to Jobber to pair this iPad.', 'muted');
+      else setJobberStatus(err.message, 'warn');
+    }
+  }
+
+  async function ensureJobberConnection() {
+    const status = await jobberFetch('/api/jobber/status', { method:'GET' });
+    if (status.connected) return true;
+    const auth = await jobberFetch('/api/jobber/connect-url', {
+      method:'POST',
+      body:JSON.stringify({ returnTo: `${window.location.origin}${window.location.pathname}` })
+    });
+    if (!auth.url) throw new Error('Jobber did not return an authorization link.');
+    window.location.assign(auth.url);
+    return false;
+  }
+
+  function customerMatchInput() {
+    return {
+      name: $('customerName').value.trim(),
+      address: $('projectAddress').value.trim(),
+      phone: $('customerPhone').value.trim(),
+      email: $('customerEmail').value.trim()
+    };
+  }
+
+  function propertyLabel(property) {
+    return property.formattedAddress || [property.address?.street1, property.address?.city, property.address?.province, property.address?.postalCode].filter(Boolean).join(', ') || 'Property address not available';
+  }
+
+  function renderClientChoices(matches, q) {
+    const box = $('jobberChoices');
+    box.hidden = false;
+    box.innerHTML = `<div class="jobber-choice-head"><b>Select the Jobber client</b><span>TITUS found more than one possible match. Choose the correct customer.</span></div>` + matches.map((match, i) => {
+      const property = match.properties?.[0];
+      const contact = [match.email, match.phone].filter(Boolean).join(' • ');
+      return `<button class="jobber-choice-btn" type="button" data-client-index="${i}"><strong>${escapeHtml(match.name || 'Unnamed client')}</strong><span>${escapeHtml(contact || 'No email / phone')}</span><small>${escapeHtml(property ? propertyLabel(property) : 'No service property found')}</small></button>`;
+    }).join('');
+    box.querySelectorAll('[data-client-index]').forEach(btn => btn.addEventListener('click', () => {
+      const client = matches[Number(btn.dataset.clientIndex)];
+      if (!client.properties?.length) {
+        setJobberStatus('That Jobber client does not have a service property. Add the property in Jobber, then try again.', 'warn');
+        return;
+      }
+      if (client.properties.length === 1) createDraftJobberQuote(client.id, client.properties[0].id, q);
+      else renderPropertyChoices(client, client.properties, q);
+    }));
+  }
+
+  function renderPropertyChoices(client, properties, q) {
+    const box = $('jobberChoices');
+    box.hidden = false;
+    box.innerHTML = `<div class="jobber-choice-head"><b>Select the service property</b><span>${escapeHtml(client.name || 'Customer')} has more than one property in Jobber.</span></div>` + properties.map((property, i) =>
+      `<button class="jobber-choice-btn" type="button" data-property-index="${i}"><strong>${escapeHtml(propertyLabel(property))}</strong><span>${escapeHtml(property.name || 'Service property')}</span></button>`
+    ).join('');
+    box.querySelectorAll('[data-property-index]').forEach(btn => btn.addEventListener('click', () => {
+      const property = properties[Number(btn.dataset.propertyIndex)];
+      createDraftJobberQuote(client.id, property.id, q);
+    }));
+  }
+
+  async function createDraftJobberQuote(clientId, propertyId, q) {
+    clearJobberChoices();
+    currentJobberSelection = { clientId, propertyId };
+    const payload = jobberPayload(q);
+    $('sendJobberBtn').disabled = true;
+    $('sendJobberBtn').textContent = 'Creating draft…';
+    setJobberStatus('Creating the draft quote in Jobber…', 'muted');
+    try {
+      const result = await jobberFetch('/api/jobber/quote', {
+        method:'POST',
+        body:JSON.stringify({ clientId, propertyId, ...payload })
+      });
+      const quote = result.quote;
+      currentJobberQuoteUrl = quote.jobberWebUri || '';
+      $('sendJobberBtn').hidden = true;
+      $('openJobberQuoteBtn').hidden = !currentJobberQuoteUrl;
+      $('openJobberQuoteBtn').textContent = quote.quoteNumber ? `Open Jobber Quote #${quote.quoteNumber}` : 'Open Draft Quote in Jobber';
+      if (quote.totalMismatch) {
+        setJobberStatus(`Draft created, but Jobber totals ${money.format(quote.amounts?.total || 0)} while TITUS is ${money.format(quote.expectedTotal)}. Review tax/settings before sending.`, 'warn');
+      } else {
+        setJobberStatus(`${result.duplicatePrevented ? 'Existing draft reused' : 'Draft created'}${quote.quoteNumber ? ` • Quote #${quote.quoteNumber}` : ''}. Review it in Jobber before sending to the customer.`, 'good');
+      }
+    } catch (err) {
+      $('sendJobberBtn').hidden = false;
+      $('sendJobberBtn').disabled = false;
+      $('sendJobberBtn').textContent = 'Send to Jobber';
+      setJobberStatus(err.message, 'warn');
+    }
+  }
+
+  async function sendToJobber() {
+    const q = calculate();
+    resetJobberResult();
+    if (!navigator.onLine) {
+      setJobberStatus('This iPad is offline. TITUS can keep estimating, but Jobber requires internet.', 'warn');
+      return;
+    }
+    if (q.finalPrice <= 0 || !buildJobberLines(q).length) {
+      setJobberStatus('Build the project scope and price before sending it to Jobber.', 'warn');
+      return;
+    }
+    const customer = customerMatchInput();
+    if (!customer.name && !customer.email && !customer.phone) {
+      setJobberStatus('Enter the customer name, phone, or email first so TITUS can find the correct Jobber client.', 'warn');
+      return;
+    }
+    $('sendJobberBtn').disabled = true;
+    $('sendJobberBtn').textContent = 'Finding client…';
+    setJobberStatus('Checking the existing Jobber client and service property…', 'muted');
+    try {
+      const connected = await ensureJobberConnection();
+      if (!connected) return;
+      const match = await jobberFetch('/api/jobber/match', { method:'POST', body:JSON.stringify(customer) });
+      $('sendJobberBtn').disabled = false;
+      $('sendJobberBtn').textContent = 'Send to Jobber';
+      if (match.status === 'not_found') {
+        setJobberStatus('No matching Jobber client was found. Nothing was created. Verify/create the client in Jobber, then try again.', 'warn');
+      } else if (match.status === 'no_property') {
+        setJobberStatus(`Found ${match.client?.name || 'the client'}, but no service property. Add the property in Jobber, then try again.`, 'warn');
+      } else if (match.status === 'choose_client') {
+        setJobberStatus('Choose the correct Jobber customer below.', 'muted');
+        renderClientChoices(match.matches || [], q);
+      } else if (match.status === 'choose_property') {
+        setJobberStatus('Choose the correct Jobber service property below.', 'muted');
+        renderPropertyChoices(match.client, match.properties || [], q);
+      } else if (match.status === 'matched') {
+        await createDraftJobberQuote(match.client.id, match.property.id, q);
+      } else {
+        setJobberStatus('TITUS could not safely identify the Jobber customer. Nothing was created.', 'warn');
+      }
+    } catch (err) {
+      $('sendJobberBtn').disabled = false;
+      $('sendJobberBtn').textContent = 'Send to Jobber';
+      setJobberStatus(err.message, 'warn');
+    }
+  }
+
+  function openJobberQuote() {
+    if (!currentJobberQuoteUrl) return;
+    window.open(currentJobberQuoteUrl, '_blank', 'noopener');
   }
 
   function escapeHtml(value) {
@@ -450,6 +729,8 @@
   $('closeSummaryBtn').addEventListener('click', closeSummary);
   $('doneSummaryBtn').addEventListener('click', closeSummary);
   $('copySummaryBtn').addEventListener('click', copySummary);
+  $('sendJobberBtn').addEventListener('click', sendToJobber);
+  $('openJobberQuoteBtn').addEventListener('click', openJobberQuote);
   $('quoteSummaryDialog').addEventListener('click', (event) => { if (event.target === $('quoteSummaryDialog')) closeSummary(); });
   document.querySelectorAll('.discount-btn').forEach(btn => btn.addEventListener('click', () => {
     $('bundleDiscount').value = btn.dataset.discount;
@@ -474,6 +755,17 @@
   $('bundleDiscount').dataset.lastApproved = $('bundleDiscount').value || '0';
   render();
   updateConnection();
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('jobber') === 'connected') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(() => window.alert('Jobber is connected to TITUS. Your estimate is still saved. Open Review & Send to create the draft quote.'), 250);
+    } else if (params.get('jobber') === 'error') {
+      window.history.replaceState({}, document.title, window.location.pathname);
+      setTimeout(() => window.alert('Jobber connection did not finish. Please try again from Review & Send.'), 250);
+    }
+  } catch (_) {}
 
   if ('serviceWorker' in navigator) {
     let refreshedForSW = false;

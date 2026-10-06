@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.7</span>
+        <span class="version">V1.8</span>
       </div>
     </header>
 
@@ -250,7 +250,7 @@
             </section>
 
             <div class="quote-actions">
-              <button id="reviewQuoteBtn" class="primary-btn" type="button">Review & Copy Summary</button>
+              <button id="reviewQuoteBtn" class="primary-btn" type="button">Review & Send</button>
               <button id="newQuoteBtn" class="secondary-btn" type="button">Start New Quote</button>
             </div>
             <p class="field-rule">The $1,199 minimum applies to paver restoration/sealing base work. Exterior cleaning and property add-ons use their own field guides or approved flat prices. Discounts above 10% require manager approval; TITUS allows up to 20%.</p>
@@ -445,9 +445,24 @@
           <span>Final selling price</span>
           <strong id="summaryFinalPrice">$0</strong>
         </div>
-        <p class="summary-note">This summary is for internal quote transfer. The official customer quote and financing options remain in Jobber.</p>
+        <p class="summary-note">TITUS can now find the existing Jobber client and create a draft quote. Nothing is emailed or sent to the customer until you review it inside Jobber.</p>
+        <section class="jobber-send-card" aria-labelledby="jobberSendHeading">
+          <div class="jobber-send-head">
+            <div>
+              <span>JOBBER HANDOFF</span>
+              <h3 id="jobberSendHeading">Create the official draft.</h3>
+            </div>
+            <span class="jobber-draft-badge">Draft only</span>
+          </div>
+          <p id="jobberStatus" class="jobber-status muted" role="status" aria-live="polite">Checking Jobber connection…</p>
+          <div id="jobberChoices" class="jobber-choices" hidden></div>
+          <div class="jobber-actions">
+            <button id="sendJobberBtn" class="jobber-send-btn" type="button">Send to Jobber</button>
+            <button id="openJobberQuoteBtn" class="jobber-open-btn" type="button" hidden>Open Draft Quote in Jobber</button>
+          </div>
+        </section>
         <div class="summary-actions">
-          <button id="copySummaryBtn" class="primary-btn" type="button">Copy Jobber Summary</button>
+          <button id="copySummaryBtn" class="secondary-btn" type="button">Copy Jobber Summary</button>
           <button id="doneSummaryBtn" class="secondary-btn" type="button">Done</button>
         </div>
         <div id="copyStatus" class="copy-status" role="status" aria-live="polite"></div>
@@ -462,6 +477,7 @@
       <button class="nav-btn customer-nav-btn" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
     </nav>
   </div>
+  <script src="config.js"></script>
   <script src="pricing-engine.js"></script>
   <script src="app.js"></script>
 </body>
