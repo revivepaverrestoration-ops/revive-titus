@@ -34,7 +34,7 @@ These are TITUS field-estimating guides for on-site quoting. They are not fixed 
   - 2-story guide: +$75
   - 3+ story guide: +$150
   - Over 5,000 sq ft: manager/custom review; use the adjustment field
-- Roof Soft Wash: $0.30 per sq ft, $599 minimum, plus field adjustment for pitch/material/access/condition
+- Roof Soft Wash: $0.45 per sq ft, $1,200 minimum, plus field adjustment for pitch/material/access/condition
 - Driveway Pressure Cleaning: $0.20 per sq ft, $149 minimum
 - Sidewalk & Street Curb Cleaning: $0.20 per sq ft, $99 minimum
 - Lanai / Patio / Pool Deck Floor Cleaning: $0.25 per sq ft, $149 minimum
@@ -65,7 +65,7 @@ SCREENS
 V1.4 CHANGES
 - Added Exterior Cleaning & Add-Ons section with collapsible categories
 - Added automatic House Soft Wash tier calculator with story adjustment and manual adjustment field
-- Added Roof Soft Wash square-foot calculator with $599 minimum and manual condition/access adjustment
+- Added Roof Soft Wash square-foot calculator with $1,200 minimum and manual condition/access adjustment
 - Added Driveway Pressure Cleaning square-foot calculator
 - Added Sidewalk & Street Curb Cleaning square-foot calculator
 - Added Lanai / Patio / Pool Deck Floor Cleaning square-foot calculator
@@ -107,3 +107,12 @@ V1.5.1 CHANGES
 - Removes the browser/iPad native dropdown contrast issue where 2-story and 3+ story choices could be unreadable.
 - Pricing logic is unchanged: 1 story +$0, 2 stories +$75, 3+ stories +$150.
 - Updated offline cache to force the story-selector UI update.
+
+
+V1.6
+- Added Customer Phone and Customer Email to Project Details.
+- Phone and email save locally with the current quote and clear on New Quote.
+- Existing V1.5 quote state migrates forward automatically.
+- Review & Copy Summary now includes customer phone and email for Jobber matching.
+- Updated project/summary layouts and offline cache.
+- This is the customer-matching preparation step for the future secure TITUS -> Jobber draft quote handoff.

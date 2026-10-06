@@ -1,4 +1,4 @@
-const CACHE = 'revive-titus-v1-5-1-story-buttons';
+const CACHE = 'revive-titus-v1-6-jobber-contact-fields';
 const ASSETS = [
   './', './index.html', './styles.css', './pricing-engine.js', './app.js', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'

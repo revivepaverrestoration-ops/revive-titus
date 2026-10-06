@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.5.1</span>
+        <span class="version">V1.6</span>
       </div>
     </header>
 
@@ -44,7 +44,7 @@
         <section class="panel project-panel">
           <div class="panel-heading">
             <div><span class="step">00</span><h2>Project details</h2></div>
-            <p>Saved only on this iPad until you start a new quote.</p>
+            <p>Saved only on this iPad until you start a new quote. Phone and email will help TITUS match the existing Jobber client when the Jobber handoff is connected.</p>
           </div>
           <div class="project-grid">
             <label class="project-field">
@@ -54,6 +54,14 @@
             <label class="project-field project-field-wide">
               <span>Project address</span>
               <input id="projectAddress" type="text" autocomplete="street-address" placeholder="Street address">
+            </label>
+            <label class="project-field">
+              <span>Customer phone</span>
+              <input id="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="(813) 555-1234">
+            </label>
+            <label class="project-field project-field-wide">
+              <span>Customer email</span>
+              <input id="customerEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="customer@email.com">
             </label>
             <label class="project-field">
               <span>Estimator</span>
@@ -148,7 +156,7 @@
                     </div>
                   </label>
                   <label class="service-row">
-                    <span><b>Roof Soft Wash</b><small>$0.30 / sq ft guide • $599 minimum • add for pitch, tile, access, or heavy condition</small></span>
+                    <span><b>Roof Soft Wash</b><small>$0.45 / sq ft guide • $1,200 minimum • add for pitch, tile, access, or heavy condition</small></span>
                     <div class="service-controls">
                       <div class="mini-input"><input id="roofWashSqft" type="number" inputmode="decimal" min="0" step="1" placeholder="sq ft"><span>sq ft</span></div>
                       <div class="mini-input currency"><span>+$</span><input id="roofWashAdjustmentFlat" type="number" inputmode="decimal" min="0" step="1" placeholder="0"></div>
@@ -289,7 +297,7 @@
           <div class="panel-heading"><div><span class="step">03</span><h2>Pressure washing & soft washing</h2></div></div>
           <div class="reference-list two-col">
             <div><span>House Soft Wash</span><strong>$249–$699+</strong><small>Size tiers through 5,000 sq ft. 2-story +$75 guide. 3+ story +$150 guide.</small></div>
-            <div><span>Roof Soft Wash</span><strong>$0.30/sq ft • $599 min</strong><small>Add for pitch, tile, access, heavy condition, or unusual protection requirements</small></div>
+            <div><span>Roof Soft Wash</span><strong>$0.45/sq ft • $1,200 min</strong><small>Add for pitch, tile, access, heavy condition, or unusual protection requirements</small></div>
             <div><span>Driveway Pressure Cleaning</span><strong>$0.20/sq ft • $149 min</strong><small>Field starting guide</small></div>
             <div><span>Sidewalk & Street Curb Cleaning</span><strong>$0.20/sq ft • $99 min</strong><small>Field starting guide</small></div>
             <div><span>Lanai / Pool Deck Floor Cleaning</span><strong>$0.25/sq ft • $149 min</strong><small>Floor only. Cage cleaning is separate.</small></div>

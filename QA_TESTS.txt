@@ -23,7 +23,7 @@ PAVER CORE
 
 EXTERIOR SEPARATION
 10. House Soft Wash only, 2,000 sq ft -> $299; paver total remains $0.
-11. Roof Soft Wash only, 1,500 sq ft -> $599; paver total remains $0.
+11. Roof Soft Wash only, 1,500 sq ft -> $1,200; paver total remains $0.
 12. Driveway cleaning only, 500 sq ft -> $149; paver total remains $0.
 13. Gutter cleaning only, 100 linear ft -> $149; paver total remains $0.
 14. Entry Refresh package only -> $249; paver total remains $0.
@@ -44,8 +44,8 @@ HOUSE SOFT WASH
 27. Over 5,000 sq ft -> custom/manager review flag.
 
 ROOF / FLATWORK / GUTTERS
-28. Roof 1,000 sq ft -> $599 minimum.
-29. Roof 3,000 sq ft -> $900.
+28. Roof 1,000 sq ft -> $1,200 minimum.
+29. Roof 3,000 sq ft -> $1,350.
 30. Driveway 500 sq ft -> $149 minimum.
 31. Driveway 1,000 sq ft -> $200.
 32. Sidewalk/curb 200 sq ft -> $99 minimum.
@@ -94,3 +94,25 @@ V1.5.1 STORY SELECTOR CHECKS
 64. Existing saved quote state keeps the previously selected story count and the correct button is highlighted.
 65. Offline cache name is revive-titus-v1-5-1-story-buttons.
 66. Version badge reads V1.5.1.
+
+
+V1.6 CONTACT / JOBBER-MATCH PREP CHECKS
+- Customer Phone field exists with tel input mode.
+- Customer Email field exists with email input mode.
+- Phone + email persist in revive-titus-v1-6 local quote state.
+- V1.5 state migrates forward without losing the existing quote.
+- New Quote clears customer name, address, phone, and email while retaining estimator.
+- Review dialog displays phone + email.
+- Copy Jobber Summary includes Phone and Email lines.
+- Service worker cache name bumped to V1.6 so installed PWAs refresh.
+
+V1.6 ROOF PRICING REVISION
+- Roof Soft Wash field rate is $0.45 / sq ft.
+- Roof Soft Wash has a hard $1,200 minimum whenever roof square footage is entered.
+- The roof minimum is independent of the $1,199 paver restoration/sealing minimum.
+- Roof condition/access adjustment remains additive on top of the calculated roof price.
+- 1,500 sq ft roof -> $1,200.
+- 3,000 sq ft roof -> $1,350.
+- 4,000 sq ft roof -> $1,800.
+- 5,000 sq ft roof -> $2,250.
+- 500 sq ft pavers + 1,500 sq ft roof -> $1,199 pavers + $1,200 roof = $2,399.

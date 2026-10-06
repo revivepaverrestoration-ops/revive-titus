@@ -12,7 +12,7 @@
     'rustTreatmentFlat','efflorescenceTreatmentFlat','oilGreaseTreatmentFlat','customAdditionalWorkFlat',
     'exteriorPackage','customPackageFlat'
   ];
-  const projectIds = ['customerName','projectAddress','estimatorName','quoteDate'];
+  const projectIds = ['customerName','projectAddress','customerPhone','customerEmail','estimatorName','quoteDate'];
   const selectDefaults = {
     bundleDiscount: '0', houseStories: '1', poolCageTier: '0', oneTimePoolClean: '0', exteriorPackage: '0'
   };
@@ -105,7 +105,7 @@
     try {
       const state = {};
       [...quoteIds, ...projectIds].forEach(id => state[id] = $(id).value);
-      localStorage.setItem('revive-titus-v1-5', JSON.stringify(state));
+      localStorage.setItem('revive-titus-v1-6', JSON.stringify(state));
       if ($('estimatorName').value.trim()) localStorage.setItem('revive-titus-estimator', $('estimatorName').value.trim());
     } catch (_) {}
   }
@@ -117,20 +117,25 @@
       const v12 = JSON.parse(localStorage.getItem('revive-titus-v1-2') || '{}');
       const v13 = JSON.parse(localStorage.getItem('revive-titus-v1-3') || '{}');
       const v14 = JSON.parse(localStorage.getItem('revive-titus-v1-4') || '{}');
-      const state = JSON.parse(localStorage.getItem('revive-titus-v1-5') || '{}');
+      const v15 = JSON.parse(localStorage.getItem('revive-titus-v1-5') || '{}');
+      const state = JSON.parse(localStorage.getItem('revive-titus-v1-6') || '{}');
       quoteIds.forEach(id => {
         const value = state[id] !== undefined ? state[id]
+          : (v15[id] !== undefined ? v15[id]
           : (v14[id] !== undefined ? v14[id]
           : (v13[id] !== undefined ? v13[id]
           : (v12[id] !== undefined ? v12[id]
-          : (v11[id] !== undefined ? v11[id] : legacy[id]))));
+          : (v11[id] !== undefined ? v11[id] : legacy[id])))));
         if (value !== undefined) {
           if (selectDefaults[id] !== undefined) $(id).value = String(value || selectDefaults[id]);
           else $(id).value = Number(value) === 0 ? '' : value;
         }
       });
       projectIds.forEach(id => {
-        const value = state[id] !== undefined ? state[id] : (v14[id] !== undefined ? v14[id] : (v13[id] !== undefined ? v13[id] : v12[id]));
+        const value = state[id] !== undefined ? state[id]
+          : (v15[id] !== undefined ? v15[id]
+          : (v14[id] !== undefined ? v14[id]
+          : (v13[id] !== undefined ? v13[id] : v12[id])));
         if (value !== undefined) $(id).value = value;
       });
       if (!$('estimatorName').value) $('estimatorName').value = localStorage.getItem('revive-titus-estimator') || '';
@@ -147,10 +152,12 @@
     $('bundleDiscount').dataset.lastApproved = '0';
     $('customerName').value = '';
     $('projectAddress').value = '';
+    $('customerPhone').value = '';
+    $('customerEmail').value = '';
     $('estimatorName').value = estimator;
     $('quoteDate').value = todayISO();
     try {
-      ['revive-titus-v1','revive-titus-v1-1','revive-titus-v1-2','revive-titus-v1-3','revive-titus-v1-4','revive-titus-v1-5'].forEach(k => localStorage.removeItem(k));
+      ['revive-titus-v1','revive-titus-v1-1','revive-titus-v1-2','revive-titus-v1-3','revive-titus-v1-4','revive-titus-v1-5','revive-titus-v1-6'].forEach(k => localStorage.removeItem(k));
     } catch (_) {}
     render();
     $('customerName').focus();
@@ -160,11 +167,15 @@
   function projectMetaHtml() {
     const customer = $('customerName').value.trim() || 'Customer not entered';
     const address = $('projectAddress').value.trim() || 'Address not entered';
+    const phone = $('customerPhone').value.trim() || 'Phone not entered';
+    const email = $('customerEmail').value.trim() || 'Email not entered';
     const estimator = $('estimatorName').value.trim() || 'Estimator not entered';
     const date = $('quoteDate').value || todayISO();
     return `
       <div><span>Customer</span><strong>${escapeHtml(customer)}</strong></div>
       <div><span>Address</span><strong>${escapeHtml(address)}</strong></div>
+      <div><span>Phone</span><strong>${escapeHtml(phone)}</strong></div>
+      <div><span>Email</span><strong>${escapeHtml(email)}</strong></div>
       <div><span>Estimator</span><strong>${escapeHtml(estimator)}</strong></div>
       <div><span>Date</span><strong>${escapeHtml(date)}</strong></div>`;
   }
@@ -237,12 +248,16 @@
   function buildSummaryText(q) {
     const customer = $('customerName').value.trim() || 'Not entered';
     const address = $('projectAddress').value.trim() || 'Not entered';
+    const phone = $('customerPhone').value.trim() || 'Not entered';
+    const email = $('customerEmail').value.trim() || 'Not entered';
     const estimator = $('estimatorName').value.trim() || 'Not entered';
     const date = $('quoteDate').value || todayISO();
     const lines = [
       'REVIVE TITUS QUOTE SUMMARY',
       `Customer: ${customer}`,
       `Address: ${address}`,
+      `Phone: ${phone}`,
+      `Email: ${email}`,
       `Estimator: ${estimator}`,
       `Date: ${date}`,
       ''
