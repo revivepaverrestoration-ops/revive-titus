@@ -1,13 +1,15 @@
-REVIVE TITUS SALES SYSTEM - PWA V1.2
+REVIVE TITUS SALES SYSTEM - PWA V1.4
 
 WHAT THIS IS
-A standalone, offline-first web app for Revive field quoting. It is designed for iPad and can be installed to the Home Screen after it is hosted over HTTPS.
+A standalone, offline-first field quoting app for Revive Paver Restoration. It is designed for iPad, uses protected pricing logic instead of spreadsheet cells, and can be installed to the Home Screen after hosting over HTTPS.
 
-V1 PRICING RULES
-- Front driveway / walkway: $1.50 per sq ft
-- Lanai / back area: $2.00 per sq ft
-- Minimum project: $1,199
-- Bundle discount: 0%, 5%, or 10%, applied to base service only and only when both front and back are included
+PAVER PRICING RULES
+- Front driveway / walkway paver restoration: $1.50 per sq ft
+- Lanai / back paver restoration: $2.00 per sq ft
+- Paver restoration/sealing base minimum: $1,199
+- The $1,199 minimum is applied to the paver base before specialty upgrades and exterior services are added
+- Bundle discount: 0%, 5%, or 10% standard; 12%, 15%, or 20% with manager approval
+- Bundle discount applies only to paver base service and only when both front and back are included
 - Joint tone: default $0.40 per sq ft
 - Color revival: default $0.60 per sq ft
 - Restore bundle: default $0.90 per sq ft
@@ -16,8 +18,43 @@ V1 PRICING RULES
 - Spot blend / problem areas: flat input, typical $150-$350
 - Designer accent finish: flat input, typical $350-$750
 - Full metallic veil: flat input, typical $750-$1,500
-- French drain cleanout: custom flat input
-- Paver repair: custom flat input
+- Paver repair & re-leveling: approved flat project price
+
+EXTERIOR CLEANING FIELD GUIDES
+These are TITUS field-estimating guides for on-site quoting. They are not fixed Jobber catalog prices unless noted.
+- House Soft Wash: tier pricing from $249 through $699 for homes up to 5,000 sq ft
+  - Up to 1,500 sq ft: $249
+  - 1,501-2,000: $299
+  - 2,001-2,500: $349
+  - 2,501-3,000: $399
+  - 3,001-3,500: $449
+  - 3,501-4,000: $499
+  - 4,001-4,500: $599
+  - 4,501-5,000: $699
+  - 2-story guide: +$75
+  - 3+ story guide: +$150
+  - Over 5,000 sq ft: manager/custom review; use the adjustment field
+- Roof Soft Wash: $0.30 per sq ft, $599 minimum, plus field adjustment for pitch/material/access/condition
+- Driveway Pressure Cleaning: $0.20 per sq ft, $149 minimum
+- Sidewalk & Street Curb Cleaning: $0.20 per sq ft, $99 minimum
+- Lanai / Patio / Pool Deck Floor Cleaning: $0.25 per sq ft, $149 minimum
+- Pool Cage & Screen Enclosure Cleaning: $299 standard / $399 large-tall; custom for oversized/two-story
+- Gutter Interior Cleaning: $1.00 per linear ft, $149 minimum
+- One-Time Pool Clean & Chemical Balance: $150 (current Jobber saved service price)
+- Professional French Drain Cleanout: current Jobber saved service starts at $249; TITUS keeps it as an editable flat price
+- Exterior gutter brightening, fence cleaning, fence staining, concrete cleaning/sealing, rust, efflorescence, oil/grease, and custom scope use approved flat project prices
+
+REVIVE CLEANING PACKAGES
+Current saved Jobber package prices represented in TITUS:
+- Entry Refresh: $249
+- Curb Appeal: $449
+- Outdoor Living Refresh: $349
+- Whole Property: $849
+- Roof & House Refresh: custom
+- Complete Home Care: custom
+
+IMPORTANT PACKAGE RULE
+A selected package is added to the quote total. Do not also enter individual services already included in the selected package unless they are genuinely additional scope.
 
 SCREENS
 1. Quote
@@ -25,13 +62,25 @@ SCREENS
 3. Pricing Guide
 4. Sales + Financing
 
-OFFLINE
-The service worker caches the app after the first successful online load. Core quote calculations and reference screens then work offline. Internet is still required for initial installation, updates, and any future Jobber/cloud integrations.
+V1.4 CHANGES
+- Added Exterior Cleaning & Add-Ons section with collapsible categories
+- Added automatic House Soft Wash tier calculator with story adjustment and manual adjustment field
+- Added Roof Soft Wash square-foot calculator with $599 minimum and manual condition/access adjustment
+- Added Driveway Pressure Cleaning square-foot calculator
+- Added Sidewalk & Street Curb Cleaning square-foot calculator
+- Added Lanai / Patio / Pool Deck Floor Cleaning square-foot calculator
+- Added Pool Cage & Screen Enclosure pricing tiers
+- Added Gutter Interior Cleaning linear-foot calculator
+- Added flat-price fields for entry cleaning, gutter brightening, fence cleaning/staining, concrete sealing, stain treatments, French drain cleanout, and custom work
+- Added One-Time Pool Clean & Chemical Balance at the current Jobber saved $150 price
+- Added Revive saved package selector and custom package field
+- Updated quote summary / Jobber copy text to include all selected services with quantities and prices
+- Corrected paver minimum logic so the $1,199 paver minimum is applied to the paver base first, then paver upgrades and exterior services are added on top
+- Blank quote now starts at $0; the $1,199 minimum appears only when paver base work is entered
+- Updated offline cache and version label to V1.4
 
-TEST LOCALLY ON WINDOWS
-1. Open Command Prompt in this folder.
-2. Run: python -m http.server 8080
-3. Open: http://localhost:8080
+OFFLINE
+The service worker caches the app after the first successful online load. Core quote calculations and reference screens work offline. Internet is still required for initial installation, updates, and future Jobber/cloud integrations.
 
 INSTALL ON IPAD AFTER HOSTING
 1. Open the HTTPS app address in Safari.
@@ -40,23 +89,3 @@ INSTALL ON IPAD AFTER HOSTING
 4. Turn on Open as Web App if shown.
 5. Name it TITUS and tap Add.
 6. Open TITUS once while online so the offline cache is populated.
-
-IMPORTANT
-This package is ready to host, but it is not yet published to a public URL. A free static host such as Cloudflare Pages, Netlify, Vercel, or GitHub Pages can host it. A custom subdomain such as titus.revivepaverrestoration.com can be added later; it is not required for testing.
-
-
-V1.1 FIELD WORKFLOW UPGRADES
-- Customer name, project address, estimator, and date header
-- Estimator name persists across new quotes on the same iPad
-- Start New Quote clears customer/project values and all quote inputs while keeping the estimator
-- Review & Copy Summary modal for fast Jobber transfer
-- Copy Jobber Summary button copies project details, scope, discount, upgrades, and final selling price
-- Version label updated to V1.1
-
-
-V1.2 SERVICE UPGRADES
-- Added French drain cleanout as a custom flat-price specialty upgrade
-- Added paver repair as a custom flat-price specialty upgrade
-- Both services flow into the upgrade subtotal, final selling price, saved quote state, review modal, and Jobber summary
-- Pricing Guide now lists both as custom approved project pricing
-- Version label updated to V1.2
