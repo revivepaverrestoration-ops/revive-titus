@@ -436,16 +436,7 @@
   }
 
   function jobberQuoteTitle(q) {
-    const exterior = selectedExteriorServices(q);
-    const upgrades = selectedPaverUpgrades();
-    if (q.hasPaverBase && exterior.length) return 'Paver Restoration & Exterior Services';
-    if (q.hasPaverBase) {
-      if (q.front > 0 && q.back <= 0) return 'Front Driveway Paver Restoration & Sealing';
-      if (q.back > 0 && q.front <= 0) return 'Lanai & Pool Deck Paver Restoration & Sealing';
-      return 'Complete Paver Restoration & Sealing';
-    }
-    if (exterior.length === 1 && !upgrades.length) return exterior[0][0];
-    return 'Revive Exterior Services';
+    return 'Revive Paver Restoration & Exterior Care Proposal';
   }
 
   function jobberPayload(q) {
@@ -666,7 +657,7 @@
         setJobberStatus('That Jobber client does not have a service property. Add the property in Jobber, then try again.', 'warn');
         return;
       }
-      if (client.properties.length === 1) createDraftJobberQuote(client.id, client.properties[0].id, q);
+      if (client.properties.length === 1) renderJobberConfirmation(client, client.properties[0], q);
       else renderPropertyChoices(client, client.properties, q);
     }));
   }
@@ -679,8 +670,57 @@
     ).join('');
     box.querySelectorAll('[data-property-index]').forEach(btn => btn.addEventListener('click', () => {
       const property = properties[Number(btn.dataset.propertyIndex)];
-      createDraftJobberQuote(client.id, property.id, q);
+      renderJobberConfirmation(client, property, q);
     }));
+  }
+
+  function renderJobberConfirmation(client, property, q) {
+    const box = $('jobberChoices');
+    const lines = buildJobberLines(q);
+    const contact = [client?.email, client?.phone].filter(Boolean).join(' • ');
+    const scopeHtml = lines.map(line => `
+      <div class="jobber-confirm-line">
+        <span><b>${escapeHtml(line.name)}</b><small>${escapeHtml(line.detail || 'Project scope')}</small></span>
+        <strong>${money.format(line.amount)}</strong>
+      </div>`).join('');
+
+    box.hidden = false;
+    box.innerHTML = `
+      <div class="jobber-confirm-card">
+        <div class="jobber-confirm-title">
+          <span>FINAL SAFETY CHECK</span>
+          <h4>Confirm before creating the Jobber draft.</h4>
+          <p>Nothing has been created yet. Verify the customer, service property, scope, and total.</p>
+        </div>
+        <div class="jobber-confirm-grid">
+          <div><span>Jobber customer</span><strong>${escapeHtml(client?.name || 'Customer')}</strong><small>${escapeHtml(contact || 'No email / phone shown')}</small></div>
+          <div><span>Service property</span><strong>${escapeHtml(propertyLabel(property))}</strong></div>
+          <div><span>Quote shell</span><strong>REVIVE MASTER QUOTE</strong><small>Reference Quote #2617 • Draft only</small></div>
+        </div>
+        <div class="jobber-confirm-scope">
+          <div class="jobber-confirm-section-label">Scope</div>
+          ${scopeHtml}
+        </div>
+        <div class="jobber-confirm-total"><span>Total</span><strong>${money.format(q.finalPrice)}</strong></div>
+        <div class="jobber-confirm-actions">
+          <button class="jobber-confirm-btn" type="button" data-confirm-jobber>Create Jobber Draft</button>
+          <button class="jobber-cancel-btn" type="button" data-cancel-jobber>Cancel</button>
+        </div>
+      </div>`;
+
+    $('sendJobberBtn').hidden = true;
+    setJobberStatus('Final confirmation required. Nothing has been created yet.', 'muted');
+
+    box.querySelector('[data-confirm-jobber]').addEventListener('click', () => {
+      createDraftJobberQuote(client.id, property.id, q);
+    });
+    box.querySelector('[data-cancel-jobber]').addEventListener('click', () => {
+      clearJobberChoices();
+      $('sendJobberBtn').hidden = false;
+      $('sendJobberBtn').disabled = false;
+      $('sendJobberBtn').textContent = 'Send to Jobber';
+      setJobberStatus('Draft creation canceled. Nothing was created.', 'muted');
+    });
   }
 
   async function createDraftJobberQuote(clientId, propertyId, q) {
@@ -689,7 +729,7 @@
     const payload = jobberPayload(q);
     $('sendJobberBtn').disabled = true;
     $('sendJobberBtn').textContent = 'Creating draft…';
-    setJobberStatus('Creating the draft quote in Jobber…', 'muted');
+    setJobberStatus('Creating the draft quote in Jobber using REVIVE MASTER QUOTE…', 'muted');
     try {
       const result = await jobberFetch('/api/jobber/quote', {
         method:'POST',
@@ -703,7 +743,7 @@
       if (quote.totalMismatch) {
         setJobberStatus(`Draft created, but Jobber totals ${money.format(quote.amounts?.total || 0)} while TITUS is ${money.format(quote.expectedTotal)}. Review tax/settings before sending.`, 'warn');
       } else {
-        setJobberStatus(`${result.duplicatePrevented ? 'Existing draft reused' : 'Draft created'}${quote.quoteNumber ? ` • Quote #${quote.quoteNumber}` : ''}. Review it in Jobber before sending to the customer.`, 'good');
+        setJobberStatus(`${result.duplicatePrevented ? 'Existing draft reused' : 'Draft created'}${quote.quoteNumber ? ` • Quote #${quote.quoteNumber}` : ''} using REVIVE MASTER QUOTE. Review it in Jobber before sending to the customer.`, 'good');
       }
     } catch (err) {
       $('sendJobberBtn').hidden = false;
@@ -749,7 +789,7 @@
         setJobberStatus('Choose the correct Jobber service property below.', 'muted');
         renderPropertyChoices(match.client, match.properties || [], q);
       } else if (match.status === 'matched') {
-        await createDraftJobberQuote(match.client.id, match.property.id, q);
+        renderJobberConfirmation(match.client, match.property, q);
       } else {
         setJobberStatus('TITUS could not safely identify the Jobber customer. Nothing was created.', 'warn');
       }
@@ -902,6 +942,6 @@
       refreshedForSW = true;
       window.location.reload();
     });
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.7').then(reg => reg.update()).catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.9.0').then(reg => reg.update()).catch(() => {}));
   }
 })();

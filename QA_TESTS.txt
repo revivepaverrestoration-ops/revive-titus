@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.7 - SPECIALTY UPGRADE QA
+REVIVE TITUS V1.9.0 - SPECIALTY UPGRADE QA
 - Client scan query no longer nests properties for every client.
 - Properties are fetched only for the top matching candidates.
 - THROTTLED GraphQL responses retry automatically using Jobber throttle metadata.
@@ -205,3 +205,32 @@ V1.8.7 SPECIALTY UPGRADE QA
 8. Confirm Custom Border and Designer Accent Finish no longer appear in Quote or Pricing Guide.
 9. Confirm Jobber draft names/amounts match TITUS and specialty-only fallback descriptions are customer-facing.
 10. Regression: paver minimum, exterior pricing, bundle discount, roof wash minimum, and Jobber draft creation remain unchanged.
+
+
+V1.8.8 JOBBER SAFETY + NO TAX QA
+1. Matched customer: Send to Jobber must stop at final confirmation and create nothing until confirmed.
+2. Multiple clients: selected client/property must appear on final confirmation.
+3. Cancel: must return safely with no quote created.
+4. Confirm: creates exactly one draft quote.
+5. Tax: Jobber draft tax amount must be $0.00 and total must match TITUS.
+6. Scope: confirmation scope and total must match Review & Send.
+
+V1.8.9 DROPDOWN CONTRAST QA
+1. Open Pool Cage & Screen Enclosure Cleaning dropdown.
+2. Confirm None, Standard — $299, and Large / tall — $399 are all readable before selecting.
+3. Open One-Time Pool Clean and Saved Package dropdowns and confirm every option is readable.
+4. Confirm selected values remain readable when the dropdown is closed.
+
+
+V1.9.0 MASTER QUOTE SHELL QA
+-----------------------------
+1. Build a mixed TITUS estimate and proceed to Jobber handoff.
+2. Confirm the final safety card shows: Quote shell = REVIVE MASTER QUOTE, Reference Quote #2617, Draft only.
+3. Create the draft. Confirm TITUS does NOT send it to the customer.
+4. Open the Jobber draft and confirm title = Revive Paver Restoration & Exterior Care Proposal.
+5. Confirm the customer-facing quote message matches the REVIVE MASTER QUOTE reference copy and ends with: Restore. Protect. Revive.
+6. If Quote #2617 has a contract disclaimer, confirm the new draft carries the same disclaimer.
+7. Confirm TITUS project lines/descriptions/prices are still used and no reference-quote service line is copied.
+8. Confirm tax amount is $0 and all TITUS-created service lines are non-taxable.
+9. Confirm the Jobber total matches the TITUS final selling price to the cent.
+10. Confirm dropdown options remain readable in Chrome/Windows and on iPad Safari.

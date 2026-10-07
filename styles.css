@@ -217,6 +217,10 @@ dl .line { border-top: 1px solid var(--line); color: white; }
 .service-row small { display: block; margin-top: 4px; color: var(--muted); line-height: 1.35; }
 .service-controls { display: flex; align-items: center; justify-content: flex-end; gap: 8px; flex-wrap: wrap; }
 .mini-select { min-height: 44px; border-radius: 12px; border: 1px solid rgba(38,216,237,.28); background: rgba(38,216,237,.09); color: var(--text); padding: 8px 34px 8px 10px; font-weight: 850; outline: none; }
+/* TITUS V1.8.9 - readable native dropdown options on Windows/Chrome */
+select option { color: #07131e; background: #f4fbff; font-weight: 750; }
+select option:checked { color: #07131e; background: #9fc2f7; }
+select option:disabled { color: #66727d; background: #eef4f7; }
 .mini-select.wide { min-width: 190px; }
 .service-price { min-width: 84px; text-align: right; color: var(--cyan); font-size: 18px; letter-spacing: -.02em; }
 .package-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 10px; padding: 12px 12px 6px; }
@@ -374,3 +378,29 @@ dl .line { border-top: 1px solid var(--line); color: white; }
 .bundle-offer-btn { min-height:42px; border:1px solid rgba(66,211,146,.48); background:rgba(66,211,146,.16); color:#e9fff5; border-radius:12px; padding:8px 13px; font-weight:900; cursor:pointer; white-space:nowrap; }
 .bundle-offer-btn:focus-visible { outline:3px solid rgba(66,211,146,.20); outline-offset:2px; }
 @media (max-width:700px) { .bundle-offer { align-items:flex-start; flex-direction:column; } .bundle-offer-btn { width:100%; } .upgrade-calc-controls { width:100%; } }
+
+
+/* TITUS V1.8.9 - Jobber final safety confirmation */
+.jobber-confirm-card { display:grid; gap:12px; padding:14px; border:1px solid rgba(38,216,237,.22); border-radius:16px; background:rgba(10,18,25,.72); }
+.jobber-confirm-title span,.jobber-confirm-section-label { display:block; color:#74dfea; font-size:11px; font-weight:950; letter-spacing:.08em; }
+.jobber-confirm-title h4 { margin:4px 0 4px; font-size:17px; }
+.jobber-confirm-title p { margin:0; color:var(--muted); font-size:12px; line-height:1.45; }
+.jobber-confirm-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.jobber-confirm-grid>div { padding:11px; border-radius:12px; background:#17222c; border:1px solid rgba(255,255,255,.08); }
+.jobber-confirm-grid>div:last-child { grid-column:1/-1; }
+.jobber-confirm-grid span,.jobber-confirm-grid small { display:block; color:var(--muted); font-size:11px; }
+.jobber-confirm-grid strong { display:block; margin:3px 0; font-size:14px; }
+.jobber-confirm-scope { display:grid; gap:6px; }
+.jobber-confirm-line { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; padding:9px 0; border-bottom:1px solid rgba(255,255,255,.07); }
+.jobber-confirm-line span,.jobber-confirm-line small { display:block; }
+.jobber-confirm-line b { font-size:13px; }
+.jobber-confirm-line small { margin-top:2px; color:var(--muted); font-size:11px; }
+.jobber-confirm-line strong { white-space:nowrap; font-size:13px; }
+.jobber-confirm-total { display:flex; align-items:center; justify-content:space-between; padding:12px 13px; border-radius:12px; background:#101a22; border:1px solid rgba(255,255,255,.1); }
+.jobber-confirm-total span { font-weight:850; }
+.jobber-confirm-total strong { font-size:20px; }
+.jobber-confirm-actions { display:grid; grid-template-columns:1fr auto; gap:9px; }
+.jobber-confirm-btn,.jobber-cancel-btn { min-height:52px; border-radius:13px; font-weight:950; cursor:pointer; padding:0 16px; }
+.jobber-confirm-btn { border:1px solid rgba(38,216,237,.42); color:#fff; background:linear-gradient(135deg,#20c8d9,#146ca8); }
+.jobber-cancel-btn { border:1px solid rgba(255,255,255,.13); color:var(--text); background:#17222c; }
+@media (max-width:680px) { .jobber-confirm-grid { grid-template-columns:1fr; } .jobber-confirm-actions { grid-template-columns:1fr; } }

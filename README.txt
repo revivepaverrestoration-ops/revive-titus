@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.7
+REVIVE TITUS V1.9.0
 Jobber matching now uses low-cost two-phase client lookup and automatic rate-limit backoff.
 
 REVIVE TITUS SALES SYSTEM - PWA V1.5.1
@@ -204,3 +204,28 @@ V1.8.7 - SPECIALTY UPGRADE CLEANUP
 - Kept Spot Blend / Problem Areas, Full Metallic Veil / Metal Flake Finish, and Paver Repair & Re-Leveling.
 - Added Concrete Edge Restraint / Paver Stabilization at $10/linear ft with a $299 project minimum.
 - Added customer-facing fallback descriptions for TITUS-only specialty lines that do not yet have dedicated Jobber catalog entries.
+
+
+V1.8.8 - JOBBER SAFETY + NO SALES TAX
+- Added a required final Jobber confirmation screen before draft creation.
+- Final confirmation shows matched Jobber customer, service property, scope lines, and TITUS total.
+- The rep must tap Create Jobber Draft before anything is created.
+- Cancel exits safely with no Jobber draft created.
+- All TITUS-created Jobber quote lines are explicitly non-taxable per Revive policy.
+
+V1.8.9 - DROPDOWN VISIBILITY FIX
+- Native select dropdown options now use dark text on a light option background for reliable readability on Windows/Chrome.
+- Fixes Pool Cage, One-Time Pool Clean, saved package, and other native dropdown menus that previously showed near-white text on a light dropdown background.
+- Includes all V1.8.8 Jobber safety confirmation and no-sales-tax behavior.
+
+
+V1.9.0 - REVIVE MASTER QUOTE SHELL
+-----------------------------------
+- TITUS-created Jobber drafts use REVIVE MASTER QUOTE as the approved customer-facing shell.
+- Because Jobber's quoteCreate API does not expose the dashboard template picker, TITUS reads reference Quote #2617 live through the connected Jobber API.
+- TITUS copies the reference quote title, customer message, and contract disclaimer when available.
+- TITUS still supplies the live project-specific service lines, Jobber catalog descriptions, and TITUS-calculated prices.
+- Quote #2617 is cached for 5 minutes to keep Jobber API usage low. If the reference lookup fails, TITUS uses the approved title/message fallback rather than blocking the estimator.
+- Final safety confirmation explicitly shows REVIVE MASTER QUOTE before draft creation.
+- Draft only: TITUS does not send the quote to the customer.
+- No sales tax: TITUS line items remain non-taxable.

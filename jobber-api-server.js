@@ -729,6 +729,58 @@ function graphQlString(value) {
   return JSON.stringify(String(value || ''));
 }
 
+// Jobber does not expose the dashboard quote-template picker through quoteCreate.
+// TITUS therefore uses the approved REVIVE MASTER QUOTE reference record as the
+// live source of customer-facing shell copy while keeping TITUS-calculated line
+// items and pricing. Editing Quote #2617's title/message/disclaimer in Jobber will
+// flow into future TITUS drafts after the short cache expires.
+const JOBBER_MASTER_QUOTE = Object.freeze({
+  name: 'REVIVE MASTER QUOTE',
+  quoteId: 'Z2lkOi8vSm9iYmVyL1F1b3RlLzY2OTE0MTg2',
+  quoteNumber: '2617',
+  fallbackTitle: 'Revive Paver Restoration & Exterior Care Proposal',
+  fallbackMessage: `Please review the services and scope included in your proposal. If everything looks correct, you can approve your quote directly through Jobber.\n\nOnce approved, our team will confirm your project details, scheduling, and any preparation instructions that apply to your service.\n\nIf you have any questions or would like to adjust the scope before approving, please contact our team. We appreciate the opportunity to care for your property and look forward to working with you.\n\nRestore. Protect. Revive.`
+});
+let jobberMasterQuoteCache = { value: null, expiresAt: 0 };
+
+async function loadJobberMasterQuoteShell() {
+  const now = Date.now();
+  if (jobberMasterQuoteCache.value && jobberMasterQuoteCache.expiresAt > now) return jobberMasterQuoteCache.value;
+
+  const fallback = {
+    name: JOBBER_MASTER_QUOTE.name,
+    quoteNumber: JOBBER_MASTER_QUOTE.quoteNumber,
+    title: JOBBER_MASTER_QUOTE.fallbackTitle,
+    message: JOBBER_MASTER_QUOTE.fallbackMessage,
+    contractDisclaimer: ''
+  };
+
+  try {
+    const data = await jobberGraphql(`query TITUSMasterQuoteShell {
+      quote(id: ${graphQlString(JOBBER_MASTER_QUOTE.quoteId)}) {
+        id quoteNumber title message contractDisclaimer updatedAt
+      }
+    }`);
+    const quote = data?.quote;
+    if (!quote?.id) throw new Error('Reference quote was not returned by Jobber.');
+    const value = {
+      name: JOBBER_MASTER_QUOTE.name,
+      quoteNumber: String(quote.quoteNumber || JOBBER_MASTER_QUOTE.quoteNumber),
+      title: String(quote.title || JOBBER_MASTER_QUOTE.fallbackTitle),
+      message: String(quote.message || JOBBER_MASTER_QUOTE.fallbackMessage),
+      contractDisclaimer: String(quote.contractDisclaimer || ''),
+      updatedAt: quote.updatedAt || null
+    };
+    jobberMasterQuoteCache = { value, expiresAt: now + (5 * 60 * 1000) };
+    console.info(`Jobber master quote shell loaded from Quote #${value.quoteNumber}${value.contractDisclaimer ? ' with contract disclaimer' : ''}.`);
+    return value;
+  } catch (err) {
+    console.warn(`Jobber master quote shell lookup failed; using TITUS fallback copy: ${err.message}`);
+    jobberMasterQuoteCache = { value: fallback, expiresAt: now + (60 * 1000) };
+    return fallback;
+  }
+}
+
 async function catalogItemsForLines(lines = []) {
   const requested = [];
   const seen = new Set();
@@ -786,6 +838,7 @@ function requiredUnknownFields(fields, supportedNames) {
 
 async function createJobberQuote({ clientId, propertyId, title, lines, expectedTotal }) {
   const schema = await quoteSchema();
+  const masterQuoteShell = await loadJobberMasterQuoteShell();
   const quoteFields = new Set((schema.quoteInput.inputFields || []).map(f => f.name));
   const lineFields = new Set((schema.lineItemInput.inputFields || []).map(f => f.name));
 
@@ -805,7 +858,7 @@ async function createJobberQuote({ clientId, propertyId, title, lines, expectedT
     if (lineFields.has('description')) payload.description = appendProjectDetail(item?.description || TITUS_FALLBACK_DESCRIPTIONS[line.name] || '', line.detail);
     if (lineFields.has('quantity')) payload.quantity = 1;
     if (lineFields.has('unitPrice')) payload.unitPrice = Number(line.amount.toFixed(2));
-    if (lineFields.has('taxable')) payload.taxable = item?.taxable ?? true;
+    if (lineFields.has('taxable')) payload.taxable = false; // Revive does not charge sales tax on TITUS quotes.
     if (lineFields.has('productOrServiceId') && item?.id) payload.productOrServiceId = item.id;
     if (lineFields.has('saveToProductsAndServices')) payload.saveToProductsAndServices = false;
     if (lineFields.has('optional')) payload.optional = false;
@@ -821,9 +874,10 @@ async function createJobberQuote({ clientId, propertyId, title, lines, expectedT
   const input = {};
   if (quoteFields.has('clientId')) input.clientId = clientId;
   if (quoteFields.has('propertyId')) input.propertyId = propertyId;
-  if (quoteFields.has('title')) input.title = title;
+  if (quoteFields.has('title')) input.title = masterQuoteShell.title || title;
   if (quoteFields.has('lineItems')) input.lineItems = mappedLines;
-  if (quoteFields.has('message')) input.message = 'Thank you for the opportunity to restore and care for your property. Please review the scope and pricing below.';
+  if (quoteFields.has('message')) input.message = masterQuoteShell.message;
+  if (quoteFields.has('contractDisclaimer') && String(masterQuoteShell.contractDisclaimer || '').trim()) input.contractDisclaimer = masterQuoteShell.contractDisclaimer;
 
   const mutation = `
     mutation TITUSCreateQuote($payload: ${schema.quoteInputName}!) {
