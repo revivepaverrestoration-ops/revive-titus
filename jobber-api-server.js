@@ -653,28 +653,124 @@ async function quoteSchema() {
   return quoteSchemaCache;
 }
 
-let catalogFieldCache = null;
-async function productCatalog() {
-  try {
-    if (!catalogFieldCache) {
-      const queryType = await introspectNamedType('Query');
-      const names = (queryType?.fields || []).map(f => f.name);
-      catalogFieldCache = ['productsAndServices', 'productsOrServices', 'productsServices'].find(name => names.includes(name)) ||
-        names.find(name => /product.*service|service.*product/i.test(name));
-    }
-    if (!catalogFieldCache) return [];
-    const data = await jobberGraphql(`query TITUSCatalog { ${catalogFieldCache}(first: 100) { nodes { id name description taxable } } }`);
-    return data[catalogFieldCache]?.nodes || [];
-  } catch (err) {
-    console.warn('Catalog lookup skipped:', err.message);
-    return [];
-  }
+// Live Jobber Products & Services mapping used by TITUS quote lines.
+// The IDs come from Revive's active Jobber catalog. We fetch the CURRENT
+// Jobber description at quote creation so edits in Jobber automatically flow
+// into future TITUS-created drafts without duplicating copy in the PWA.
+const JOBBER_SERVICE_IDS = Object.freeze({
+  'Fence Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvMjY4OTUwNzM=',
+  'Curb Cleaning & Sealing – Landscape/Flower Bed Edging': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvMzQwODgwMjQ=',
+  'Complete Paver Restoration & Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzIzOTc=',
+  'Lanai & Pool Deck Paver Restoration & Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzIzOTg=',
+  'Paver Cleaning Only': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzIzOTk=',
+  'Paver Joint Re-Sanding': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDA=',
+  'Paver Repair & Re-Leveling': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDE=',
+  'Paver Sealer Stripping & Surface Restoration': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDI=',
+  'Natural Stone Restoration & Nano Enhancement Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDM=',
+  'Shellock Paver Cleaning & Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDQ=',
+  'Color Revival': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDU=',
+  'Joint Tone Enhancement / Premium Dyed Sand': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDY=',
+  'Accent Border Pop': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDc=',
+  'Designer Accent Finish': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDg=',
+  'Full Metallic Veil / Metal Flake Finish': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDk=',
+  'Diamond Dust Anti-Slip Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTA=',
+  'Professional Concrete Cleaning & Protective Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTE=',
+  'Driveway Pressure Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTI=',
+  'Sidewalk & Street Curb Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTM=',
+  'Front Porch & Entry Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTQ=',
+  'Lanai, Patio & Pool Deck Floor Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTU=',
+  'Pool Cage & Screen Enclosure Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTY=',
+  'House Soft Wash': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTc=',
+  'Roof Soft Wash': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTg=',
+  'Gutter Interior Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTk=',
+  'Exterior Gutter Brightening': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjA=',
+  'Fence Staining & Protection': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjE=',
+  'Landscape Curb & Flower Bed Edging Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjI=',
+  'Revive Entry Refresh Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjM=',
+  'Revive Curb Appeal Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjQ=',
+  'Revive Outdoor Living Refresh Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjU=',
+  'Revive Whole Property Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MjY=',
+  'Revive Roof & House Refresh Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0Mjc=',
+  'Revive Complete Home Care Package': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0Mjg=',
+  'Rust Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0Mjk=',
+  'Efflorescence Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzA=',
+  'Oil & Grease Stain Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzE=',
+  'Professional French Drain Cleanout': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzI=',
+  'Recurring Revive Program': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzM=',
+  'Commercial Exterior Pressure Washing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzQ=',
+  'Commercial Parking Garage Cleaning': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzU=',
+  'One-Time Pool Clean & Chemical Balance': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MzY=',
+  'Custom Scope / Additional Work': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0Mzc=',
+  'Front Driveway Paver Restoration & Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzYzOTI='
+});
+
+// TITUS uses a few shorter field labels than the saved Jobber catalog names.
+const TITUS_JOBBER_SERVICE_ALIASES = Object.freeze({
+  'Joint Tone Enhancement': 'Joint Tone Enhancement / Premium Dyed Sand'
+});
+
+const catalogItemCache = new Map();
+
+function mappedJobberServiceName(titusName) {
+  return TITUS_JOBBER_SERVICE_ALIASES[titusName] || titusName;
 }
 
-function appendEstimateDetail(description, detail) {
+function jobberServiceIdForLine(titusName) {
+  return JOBBER_SERVICE_IDS[mappedJobberServiceName(titusName)] || '';
+}
+
+function graphQlString(value) {
+  return JSON.stringify(String(value || ''));
+}
+
+async function catalogItemsForLines(lines = []) {
+  const requested = [];
+  const seen = new Set();
+  for (const line of lines) {
+    const titusName = String(line?.name || '');
+    const serviceName = mappedJobberServiceName(titusName);
+    const id = jobberServiceIdForLine(titusName);
+    if (!id || seen.has(id)) continue;
+    seen.add(id);
+    const cached = catalogItemCache.get(id);
+    if (cached) continue;
+    requested.push({ id, serviceName });
+  }
+
+  if (requested.length) {
+    try {
+      const fields = requested.map((entry, index) =>
+        `i${index}: productOrService(id: ${graphQlString(entry.id)}) { id name description taxable }`
+      ).join('\n');
+      const data = await jobberGraphql(`query TITUSCatalogItems {\n${fields}\n}`);
+      requested.forEach((entry, index) => {
+        const item = data?.[`i${index}`];
+        if (item?.id) catalogItemCache.set(entry.id, item);
+      });
+    } catch (err) {
+      console.warn('Jobber service description lookup skipped:', err.message);
+    }
+  }
+
+  const byTitusName = new Map();
+  for (const line of lines) {
+    const titusName = String(line?.name || '');
+    const id = jobberServiceIdForLine(titusName);
+    const item = id ? catalogItemCache.get(id) : null;
+    if (item) byTitusName.set(normalizeName(titusName), item);
+  }
+  return byTitusName;
+}
+
+function appendProjectDetail(description, detail) {
   const cleanDetail = String(detail || '').trim();
-  if (!cleanDetail) return description || '';
-  const detailLine = `TITUS estimate detail: ${cleanDetail}`;
+  const generic = new Set([
+    'flat project price',
+    'saved jobber service',
+    'revive saved package'
+  ]);
+  if (!cleanDetail || generic.has(cleanDetail.toLowerCase())) return description || '';
+  const detailLine = `Project details: ${cleanDetail}`;
   return description ? `${description}\n\n${detailLine}` : detailLine;
 }
 
@@ -695,13 +791,12 @@ async function createJobberQuote({ clientId, propertyId, title, lines, expectedT
     throw new Error(`Jobber's current quote schema has required fields TITUS has not mapped yet: ${[...quoteUnknown, ...lineUnknown].join(', ')}`);
   }
 
-  const catalog = await productCatalog();
-  const byName = new Map(catalog.map(item => [normalizeName(item.name), item]));
+  const catalogByTitusName = await catalogItemsForLines(lines);
   const mappedLines = lines.map(line => {
-    const item = byName.get(normalizeName(line.name));
+    const item = catalogByTitusName.get(normalizeName(line.name));
     const payload = {};
-    if (lineFields.has('name')) payload.name = line.name;
-    if (lineFields.has('description')) payload.description = appendEstimateDetail(item?.description || '', line.detail);
+    if (lineFields.has('name')) payload.name = item?.name || line.name;
+    if (lineFields.has('description')) payload.description = appendProjectDetail(item?.description || '', line.detail);
     if (lineFields.has('quantity')) payload.quantity = 1;
     if (lineFields.has('unitPrice')) payload.unitPrice = Number(line.amount.toFixed(2));
     if (lineFields.has('taxable')) payload.taxable = item?.taxable ?? true;
@@ -712,6 +807,10 @@ async function createJobberQuote({ clientId, propertyId, title, lines, expectedT
     if (lineFields.has('category')) payload.category = 'SERVICE';
     return payload;
   });
+
+  const describedCount = mappedLines.filter(line => String(line.description || '').trim() && !String(line.description || '').startsWith('Project details:')).length;
+  const linkedCount = mappedLines.filter(line => line.productOrServiceId).length;
+  console.info(`Jobber quote catalog enrichment: ${describedCount}/${mappedLines.length} descriptions, ${linkedCount}/${mappedLines.length} linked services`);
 
   const input = {};
   if (quoteFields.has('clientId')) input.clientId = clientId;

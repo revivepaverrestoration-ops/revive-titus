@@ -860,6 +860,6 @@
       refreshedForSW = true;
       window.location.reload();
     });
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.5').then(reg => reg.update()).catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.6').then(reg => reg.update()).catch(() => {}));
   }
 })();

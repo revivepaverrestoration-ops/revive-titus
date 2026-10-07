@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.5
+REVIVE TITUS V1.8.6
 Jobber matching now uses low-cost two-phase client lookup and automatic rate-limit backoff.
 
 REVIVE TITUS SALES SYSTEM - PWA V1.5.1
@@ -184,3 +184,12 @@ V1.8.3 - JOBBER PAIRING CONTINUATION FIX
 - Does not depend on browser storage between PIN acceptance and OAuth redirect.
 - Adds cache-busting script/service-worker URLs so browsers cannot mix an old app.js with a new version label.
 - Changes pairing text from iPad-specific wording to device wording for laptop/admin setup.
+
+V1.8.6 - LIVE JOBBER SERVICE DESCRIPTIONS
+- TITUS-created Jobber drafts now pull the current saved Jobber Products & Services description for mapped services at quote creation.
+- Uses Jobber productOrService(id:) lookups for only the line items on the current quote, avoiding the broken catalog-wide query and minimizing GraphQL cost.
+- Links mapped quote lines to the existing Jobber Product/Service ID while preserving the exact TITUS-calculated project price.
+- Uses the saved Jobber catalog name when available (example: Joint Tone Enhancement / Premium Dyed Sand).
+- Replaces internal-looking "TITUS estimate detail" copy with customer-facing "Project details" and suppresses generic notes such as "Flat project price."
+- Live descriptions are cached in the bridge process after lookup, so repeated quotes avoid unnecessary Jobber requests.
+- TITUS-only items without a saved Jobber catalog entry continue to send safely with their TITUS line name/detail and price.

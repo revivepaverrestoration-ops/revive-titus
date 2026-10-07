@@ -1,6 +1,6 @@
-const CACHE = 'revive-titus-v1-8-5-jobber-rate-limit-fix';
+const CACHE = 'revive-titus-v1-8-6-jobber-live-descriptions';
 const ASSETS = [
-  './', './index.html', './styles.css', './config.js?v=1.8.5', './pricing-engine.js?v=1.8.5', './app.js?v=1.8.5', './manifest.webmanifest',
+  './', './index.html', './styles.css', './config.js?v=1.8.6', './pricing-engine.js?v=1.8.6', './app.js?v=1.8.6', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {

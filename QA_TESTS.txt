@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.5 - JOBBER RATE LIMIT QA
+REVIVE TITUS V1.8.6 - JOBBER RATE LIMIT QA
 - Client scan query no longer nests properties for every client.
 - Properties are fetched only for the top matching candidates.
 - THROTTLED GraphQL responses retry automatically using Jobber throttle metadata.
@@ -183,3 +183,12 @@ V1.8.3 JOBBER PAIRING CONTINUATION CHECKS
 - Same token is passed directly into connect-url request for the initial OAuth redirect.
 - Browser storage is still used for future sessions but is no longer required to continue the first setup flow.
 - Versioned app.js/config.js/pricing-engine.js URLs prevent stale service-worker asset mixing.
+
+V1.8.6 LIVE DESCRIPTION QA
+1. Create a draft with Front Driveway Paver Restoration & Sealing. PASS when the Jobber draft includes the full saved Jobber process description plus Project details for the measured scope.
+2. Add Joint Tone Enhancement. PASS when the Jobber draft uses the saved catalog name "Joint Tone Enhancement / Premium Dyed Sand" and its full saved description.
+3. Add Color Revival, House Soft Wash, Roof Soft Wash, driveway cleaning, a package, and stain treatment in separate test quotes. PASS when each mapped line includes the current saved Jobber description.
+4. Confirm unit prices still equal TITUS-calculated project amounts and the Jobber quote total matches the TITUS final selling price.
+5. Confirm generic detail text (Flat project price / Saved Jobber service / Revive saved package) is not appended to the customer-facing description.
+6. Confirm TITUS-only lines without a saved catalog entry (Restore Bundle, Custom Border, Spot Blend / Problem Areas, Custom Revive Package) still create safely using their TITUS line name/detail and price.
+7. Check Render logs after a draft. PASS when log reports "Jobber quote catalog enrichment" with mapped description/link counts and no catalog-wide query error.
