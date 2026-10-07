@@ -280,20 +280,73 @@ async function refreshConnection(force = false) {
   }
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function throttleWaitMs(body) {
+  const cost = body?.extensions?.cost || {};
+  const status = cost.throttleStatus || {};
+  const requested = Number(cost.requestedQueryCost || 0);
+  const available = Number(status.currentlyAvailable || 0);
+  const maximum = Number(status.maximumAvailable || 0);
+  const restoreRate = Number(status.restoreRate || 0);
+  if (maximum > 0 && requested > maximum) return null;
+  if (restoreRate > 0 && requested > available) {
+    return Math.min(10000, Math.max(500, Math.ceil(((requested - available) / restoreRate) * 1000) + 250));
+  }
+  return 750;
+}
+
 async function jobberGraphql(query, variables = {}) {
   let connection = await refreshConnection(false);
-  let result = await directGraphql(connection.accessToken, query, variables);
-  if (result.response.status === 401) {
-    connection = await refreshConnection(true);
-    result = await directGraphql(connection.accessToken, query, variables);
+  let authRetried = false;
+
+  for (let throttleAttempt = 0; throttleAttempt < 4; throttleAttempt += 1) {
+    let result = await directGraphql(connection.accessToken, query, variables);
+    if (result.response.status === 401 && !authRetried) {
+      authRetried = true;
+      connection = await refreshConnection(true);
+      result = await directGraphql(connection.accessToken, query, variables);
+    }
+    if (!result.response.ok) throw new Error(result.body?.errors?.[0]?.message || `Jobber API returned HTTP ${result.response.status}`);
+
+    const throttled = (result.body.errors || []).find(error =>
+      error?.extensions?.code === 'THROTTLED' || String(error?.message || '').toLowerCase() === 'throttled'
+    );
+    if (throttled) {
+      const waitMs = throttleWaitMs(result.body);
+      const cost = result.body?.extensions?.cost || {};
+      const status = cost.throttleStatus || {};
+      if (waitMs == null) {
+        throw new Error(`Jobber rejected an over-sized query (requested cost ${cost.requestedQueryCost || 'unknown'}, maximum ${status.maximumAvailable || 'unknown'}).`);
+      }
+      if (throttleAttempt >= 3) {
+        const err = new Error('Jobber is temporarily rate limiting this lookup. Wait a few seconds and try again.');
+        err.graphqlErrors = result.body.errors;
+        throw err;
+      }
+      console.warn('Jobber GraphQL throttled; retrying', {
+        attempt: throttleAttempt + 1,
+        waitMs,
+        requestedQueryCost: cost.requestedQueryCost || null,
+        currentlyAvailable: status.currentlyAvailable || null,
+        maximumAvailable: status.maximumAvailable || null,
+        restoreRate: status.restoreRate || null
+      });
+      await sleep(waitMs);
+      continue;
+    }
+
+    if (result.body.errors?.length) {
+      const err = new Error(result.body.errors.map(e => e.message).join(' | '));
+      err.graphqlErrors = result.body.errors;
+      throw err;
+    }
+    return result.body.data;
   }
-  if (!result.response.ok) throw new Error(result.body?.errors?.[0]?.message || `Jobber API returned HTTP ${result.response.status}`);
-  if (result.body.errors?.length) {
-    const err = new Error(result.body.errors.map(e => e.message).join(' | '));
-    err.graphqlErrors = result.body.errors;
-    throw err;
-  }
-  return result.body.data;
+
+  throw new Error('Jobber lookup could not complete.');
 }
 
 app.get('/api/jobber/status', requireDevice, async (req, res) => {
@@ -377,31 +430,43 @@ app.get('/api/jobber/callback', async (req, res) => {
   }
 });
 
-async function fetchClientsForMatch() {
+async function fetchClientBasicsForMatch() {
   const nodes = [];
   let after = null;
   while (nodes.length < MAX_CLIENT_SCAN) {
+    const remaining = MAX_CLIENT_SCAN - nodes.length;
+    const pageSize = Math.min(100, remaining);
     const data = await jobberGraphql(`
-      query TITUSClients($after: String) {
-        clients(first: 100, after: $after) {
+      query TITUSClientBasics($after: String, $first: Int!) {
+        clients(first: $first, after: $after) {
           nodes {
             id name firstName lastName companyName email phone isArchived jobberWebUri
-            clientProperties(first: 20) {
-              nodes {
-                id name jobberWebUri
-                address { street1 street2 city province postalCode country }
-              }
-            }
           }
           pageInfo { hasNextPage endCursor }
         }
-      }`, { after });
+      }`, { after, first: pageSize });
     const page = data.clients;
     nodes.push(...(page?.nodes || []));
     if (!page?.pageInfo?.hasNextPage || !page.pageInfo.endCursor) break;
     after = page.pageInfo.endCursor;
   }
   return nodes.slice(0, MAX_CLIENT_SCAN);
+}
+
+async function fetchClientWithProperties(clientId) {
+  const data = await jobberGraphql(`
+    query TITUSClientDetails($id: EncodedId!) {
+      client(id: $id) {
+        id name firstName lastName companyName email phone isArchived jobberWebUri
+        clientProperties(first: 20) {
+          nodes {
+            id name jobberWebUri
+            address { street1 street2 city province postalCode country }
+          }
+        }
+      }
+    }`, { id: clientId });
+  return data.client;
 }
 
 function scoreClient(client, wanted) {
@@ -485,9 +550,21 @@ app.post('/api/jobber/match', requireDevice, async (req, res) => {
     if (!wanted.name && !wanted.email && !wanted.phone && !wanted.address) {
       return jsonError(res, 400, 'MATCH_INPUT_REQUIRED', 'Enter at least a customer name, email, phone, or project address in TITUS first.');
     }
-    const clients = await fetchClientsForMatch();
-    const ranked = clients
+    const clients = await fetchClientBasicsForMatch();
+    const identityRanked = clients
       .map(client => ({ client, ...scoreClient(client, wanted) }))
+      .filter(row => row.score > 0)
+      .sort((a,b) => b.score - a.score);
+
+    if (!identityRanked.length) return res.json({ ok: true, status: 'not_found', scanned: clients.length });
+
+    const candidates = [];
+    for (const row of identityRanked.slice(0, 8)) {
+      const detailed = await fetchClientWithProperties(row.client.id);
+      if (!detailed) continue;
+      candidates.push({ client: detailed, ...scoreClient(detailed, wanted) });
+    }
+    const ranked = candidates
       .filter(row => row.score > 0)
       .sort((a,b) => b.score - a.score);
 
@@ -506,7 +583,21 @@ app.post('/api/jobber/match', requireDevice, async (req, res) => {
 
     const client = publicClient(top.client, top);
     const propertyPick = pickProperty(client.properties, wanted.address);
-    if (propertyPick.status === 'none') return res.json({ ok: true, status: 'no_property', client });
+    if (propertyPick.status === 'none') {
+      const alternatives = ranked
+        .slice(1, 8)
+        .map(row => publicClient(row.client, row))
+        .filter(candidate => candidate.properties?.length);
+      if (alternatives.length) {
+        return res.json({
+          ok: true,
+          status: 'choose_client',
+          reason: 'top_match_has_no_property',
+          matches: [client, ...alternatives].slice(0, 8)
+        });
+      }
+      return res.json({ ok: true, status: 'no_property', client });
+    }
     if (propertyPick.status === 'many') return res.json({ ok: true, status: 'choose_property', client, properties: propertyPick.properties });
     return res.json({ ok: true, status: 'matched', client, property: propertyPick.property });
   } catch (err) {

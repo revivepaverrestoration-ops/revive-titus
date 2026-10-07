@@ -1,3 +1,6 @@
+REVIVE TITUS V1.8.5
+Jobber matching now uses low-cost two-phase client lookup and automatic rate-limit backoff.
+
 REVIVE TITUS SALES SYSTEM - PWA V1.5.1
 
 WHAT THIS IS

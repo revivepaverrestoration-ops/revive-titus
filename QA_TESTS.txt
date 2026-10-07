@@ -1,3 +1,10 @@
+REVIVE TITUS V1.8.5 - JOBBER RATE LIMIT QA
+- Client scan query no longer nests properties for every client.
+- Properties are fetched only for the top matching candidates.
+- THROTTLED GraphQL responses retry automatically using Jobber throttle metadata.
+- The previous V1.8.4 query could exceed Jobber query-cost limits on large accounts.
+- If the strongest phone/email match has no service property, TITUS now offers other matching clients with properties instead of dead-ending.
+
 REVIVE TITUS V1.5.1 - QA TESTS
 
 AUTOMATED CHECK RESULTS
