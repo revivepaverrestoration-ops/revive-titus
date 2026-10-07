@@ -176,7 +176,7 @@ V1.8.1 - IPAD PAIRING RELIABILITY FIX
 - Adds safe server-side pairing diagnostics without logging the PIN or device token.
 
 
-V1.8.2 - JOBBER PAIRING CONTINUATION FIX
+V1.8.3 - JOBBER PAIRING CONTINUATION FIX
 - Uses the newly-issued device token directly for the first Jobber status and authorization requests.
 - Does not depend on browser storage between PIN acceptance and OAuth redirect.
 - Adds cache-busting script/service-worker URLs so browsers cannot mix an old app.js with a new version label.

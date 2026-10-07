@@ -10,9 +10,12 @@ app.set('trust proxy', 1);
 app.use(express.json({ limit: '256kb' }));
 
 const PORT = Number(process.env.PORT || 10000);
-const JOBBER_CLIENT_ID = process.env.JOBBER_CLIENT_ID || '';
-const JOBBER_CLIENT_SECRET = process.env.JOBBER_CLIENT_SECRET || '';
-const JOBBER_REDIRECT_URI = process.env.JOBBER_REDIRECT_URI || '';
+const RAW_JOBBER_CLIENT_ID = process.env.JOBBER_CLIENT_ID || '';
+const RAW_JOBBER_CLIENT_SECRET = process.env.JOBBER_CLIENT_SECRET || '';
+const RAW_JOBBER_REDIRECT_URI = process.env.JOBBER_REDIRECT_URI || '';
+const JOBBER_CLIENT_ID = RAW_JOBBER_CLIENT_ID.trim();
+const JOBBER_CLIENT_SECRET = RAW_JOBBER_CLIENT_SECRET.trim();
+const JOBBER_REDIRECT_URI = RAW_JOBBER_REDIRECT_URI.trim();
 const JOBBER_GRAPHQL_VERSION = process.env.JOBBER_GRAPHQL_VERSION || '2026-09-25';
 const TITUS_PAIRING_PIN = process.env.TITUS_PAIRING_PIN || '';
 const MAX_CLIENT_SCAN = Math.max(100, Math.min(5000, Number(process.env.MAX_CLIENT_SCAN || 1000)));
@@ -208,9 +211,23 @@ async function exchangeToken(params) {
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body: new URLSearchParams(params)
   });
-  const body = await response.json().catch(() => ({}));
+  const raw = await response.text();
+  let body = {};
+  try { body = raw ? JSON.parse(raw) : {}; } catch (_) {}
   if (!response.ok || !body.access_token) {
-    throw new Error(body.error_description || body.error || `Jobber token endpoint returned HTTP ${response.status}`);
+    const detail = String(body.error_description || body.error || raw || `HTTP ${response.status}`).trim().slice(0, 300);
+    console.error('Jobber token exchange rejected', {
+      status: response.status,
+      detail,
+      grantType: params.grant_type || '',
+      clientIdLength: JOBBER_CLIENT_ID.length,
+      clientSecretLength: JOBBER_CLIENT_SECRET.length,
+      trimmedClientIdWhitespace: RAW_JOBBER_CLIENT_ID !== JOBBER_CLIENT_ID,
+      trimmedClientSecretWhitespace: RAW_JOBBER_CLIENT_SECRET !== JOBBER_CLIENT_SECRET,
+      redirectUri: JOBBER_REDIRECT_URI,
+      hasCodeVerifier: Boolean(params.code_verifier)
+    });
+    throw new Error(`Jobber token exchange failed (${response.status}): ${detail}`);
   }
   return body;
 }
@@ -349,7 +366,7 @@ app.get('/api/jobber/callback', async (req, res) => {
     console.error('OAuth callback failed:', err);
     const redirect = new URL(returnTo);
     redirect.searchParams.set('jobber', 'error');
-    redirect.searchParams.set('message', 'Jobber connection failed. Please try again.');
+    redirect.searchParams.set('message', String(err.message || 'Jobber connection failed. Please try again.').slice(0, 240));
     res.redirect(302, redirect.toString());
   }
 });

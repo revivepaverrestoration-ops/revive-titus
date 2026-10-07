@@ -171,7 +171,7 @@ V1.8.1 PAIRING RELIABILITY CHECKS
 - Backend pairing logs never include the PIN or full bearer token.
 
 
-V1.8.2 JOBBER PAIRING CONTINUATION CHECKS
+V1.8.3 JOBBER PAIRING CONTINUATION CHECKS
 - Pair endpoint token is passed directly into status request after PIN acceptance.
 - Same token is passed directly into connect-url request for the initial OAuth redirect.
 - Browser storage is still used for future sessions but is no longer required to continue the first setup flow.
