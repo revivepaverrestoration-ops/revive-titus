@@ -838,10 +838,18 @@
     const params = new URLSearchParams(window.location.search);
     if (params.get('jobber') === 'connected') {
       window.history.replaceState({}, document.title, window.location.pathname);
-      setTimeout(() => window.alert('Jobber is connected to TITUS. Your estimate is still saved. Open Review & Send to create the draft quote.'), 250);
+      setTimeout(() => {
+        openSummary();
+        setJobberStatus('Jobber connected. Continuing with this estimate…', 'good');
+        setTimeout(() => sendToJobber(), 350);
+      }, 250);
     } else if (params.get('jobber') === 'error') {
+      const detail = params.get('message') || 'Jobber connection did not finish. Please try again.';
       window.history.replaceState({}, document.title, window.location.pathname);
-      setTimeout(() => window.alert('Jobber connection did not finish. Please try again from Review & Send.'), 250);
+      setTimeout(() => {
+        openSummary();
+        setJobberStatus(detail, 'warn');
+      }, 250);
     }
   } catch (_) {}
 
@@ -852,6 +860,6 @@
       refreshedForSW = true;
       window.location.reload();
     });
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.3').then(reg => reg.update()).catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.4').then(reg => reg.update()).catch(() => {}));
   }
 })();

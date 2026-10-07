@@ -1,6 +1,6 @@
-const CACHE = 'revive-titus-v1-8-3-pairing-continuation-fix';
+const CACHE = 'revive-titus-v1-8-4-auto-resume-jobber';
 const ASSETS = [
-  './', './index.html', './styles.css', './config.js?v=1.8.3', './pricing-engine.js?v=1.8.3', './app.js?v=1.8.3', './manifest.webmanifest',
+  './', './index.html', './styles.css', './config.js?v=1.8.4', './pricing-engine.js?v=1.8.4', './app.js?v=1.8.4', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {

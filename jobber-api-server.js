@@ -359,6 +359,12 @@ app.get('/api/jobber/callback', async (req, res) => {
       throw new Error(accountResult.body.errors?.[0]?.message || 'Could not verify the connected Jobber account.');
     }
     await saveTokens(tokens, accountResult.body.data.account);
+    console.log('Jobber OAuth connected', {
+      accountId: accountResult.body.data.account?.id || null,
+      accountName: accountResult.body.data.account?.name || null,
+      hasRefreshToken: Boolean(tokens.refresh_token),
+      accessTokenExpiresIn: Number(tokens.expires_in || 0)
+    });
     const redirect = new URL(returnTo);
     redirect.searchParams.set('jobber', 'connected');
     res.redirect(302, redirect.toString());
