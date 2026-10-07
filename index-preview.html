@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.9.0</span>
+        <span class="version">V1.9.1</span>
       </div>
     </header>
 
@@ -459,6 +459,22 @@
             <button id="sendJobberBtn" class="jobber-send-btn" type="button">Send to Jobber</button>
             <button id="openJobberQuoteBtn" class="jobber-open-btn" type="button" hidden>Open Draft Quote in Jobber</button>
           </div>
+          <div id="jobberBrandingCard" class="jobber-branding-card" hidden>
+            <div class="jobber-branding-head">
+              <span>FINAL BRANDING STEP</span>
+              <h4>Finish the top of the Jobber quote.</h4>
+              <p>Jobber does not let TITUS apply the saved Introduction banner automatically. Before sending the quote, match the top of the REVIVE MASTER QUOTE.</p>
+            </div>
+            <ol class="jobber-branding-steps">
+              <li>Open the draft quote in Jobber.</li>
+              <li>Add an <strong>Introduction</strong> section at the very top.</li>
+              <li>Use the saved Revive banner image from <strong>REVIVE MASTER QUOTE</strong>.</li>
+              <li>Set the heading to <strong>Your Revive Proposal</strong>.</li>
+              <li>Tap <strong>Copy Proposal Intro</strong> below and paste it into the Introduction text.</li>
+            </ol>
+            <button id="copyProposalIntroBtn" class="jobber-branding-copy-btn" type="button">Copy Proposal Intro</button>
+            <p id="proposalIntroCopyStatus" class="jobber-branding-copy-status" role="status" aria-live="polite"></p>
+          </div>
         </section>
         <div class="summary-actions">
           <button id="copySummaryBtn" class="secondary-btn" type="button">Copy Jobber Summary</button>
@@ -476,8 +492,8 @@
       <button class="nav-btn customer-nav-btn" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
     </nav>
   </div>
-  <script src="config.js?v=1.9.0"></script>
-  <script src="pricing-engine.js?v=1.9.0"></script>
-  <script src="app.js?v=1.9.0"></script>
+  <script src="config.js?v=1.9.1"></script>
+  <script src="pricing-engine.js?v=1.9.1"></script>
+  <script src="app.js?v=1.9.1"></script>
 </body>
 </html>

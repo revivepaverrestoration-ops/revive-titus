@@ -1,4 +1,4 @@
-REVIVE TITUS V1.9.0 - SPECIALTY UPGRADE QA
+REVIVE TITUS V1.9.1 - SPECIALTY UPGRADE QA
 - Client scan query no longer nests properties for every client.
 - Properties are fetched only for the top matching candidates.
 - THROTTLED GraphQL responses retry automatically using Jobber throttle metadata.
@@ -234,3 +234,13 @@ V1.9.0 MASTER QUOTE SHELL QA
 8. Confirm tax amount is $0 and all TITUS-created service lines are non-taxable.
 9. Confirm the Jobber total matches the TITUS final selling price to the cent.
 10. Confirm dropdown options remain readable in Chrome/Windows and on iPad Safari.
+
+
+V1.9.1 FINISH QUOTE BRANDING QA
+1. Create a Jobber draft from TITUS.
+2. Confirm Open Jobber Quote appears.
+3. Confirm the FINAL BRANDING STEP card appears only after a draft is created or reused.
+4. Confirm the card tells the estimator to add Introduction, use the REVIVE MASTER QUOTE banner, and use heading "Your Revive Proposal."
+5. Tap Copy Proposal Intro and verify the approved intro is copied.
+6. Reopen Review & Send and confirm the branding card resets hidden until a draft exists.
+7. Confirm TITUS remains draft-only and never sends the quote to the customer.

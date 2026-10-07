@@ -355,6 +355,14 @@ select option:disabled { color: #66727d; background: #eef4f7; }
 .jobber-send-btn,.jobber-open-btn { min-height:54px; border-radius:14px; font-weight:950; cursor:pointer; padding:0 16px; }
 .jobber-send-btn { border:1px solid rgba(38,216,237,.42); color:#fff; background:linear-gradient(135deg,#20c8d9,#146ca8); box-shadow:0 10px 26px rgba(12,111,139,.22); }
 .jobber-open-btn { border:1px solid rgba(66,211,146,.38); color:#eafff5; background:linear-gradient(135deg,rgba(38,173,112,.9),rgba(24,111,82,.95)); }
+.jobber-branding-card { margin-top:12px; padding:14px; border-radius:15px; border:1px solid rgba(255,188,74,.34); background:linear-gradient(145deg,rgba(255,188,74,.09),rgba(13,21,29,.78)); }
+.jobber-branding-head span { display:block; color:#ffd16d; font-size:10px; font-weight:950; letter-spacing:.11em; }
+.jobber-branding-head h4 { margin:4px 0 5px; font-size:17px; }
+.jobber-branding-head p { margin:0; color:#d4dde5; font-size:12px; line-height:1.5; }
+.jobber-branding-steps { margin:12px 0 13px; padding-left:21px; color:#e7eef4; font-size:12px; line-height:1.55; }
+.jobber-branding-steps li + li { margin-top:5px; }
+.jobber-branding-copy-btn { width:100%; min-height:50px; border-radius:13px; border:1px solid rgba(255,188,74,.46); color:#fff6df; background:linear-gradient(135deg,rgba(170,110,16,.96),rgba(114,72,12,.98)); font-weight:950; cursor:pointer; padding:0 16px; }
+.jobber-branding-copy-status { min-height:18px; margin:8px 0 0; color:#ffe2a8; font-size:11px; line-height:1.4; }
 .jobber-send-btn:disabled { opacity:.58; cursor:wait; }
 .jobber-choices { display:grid; gap:8px; margin:10px 0 12px; }
 .jobber-choice-head { padding:4px 2px 2px; }

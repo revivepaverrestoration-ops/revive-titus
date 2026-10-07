@@ -20,6 +20,7 @@
   const money = new Intl.NumberFormat('en-US', { style:'currency', currency:'USD', maximumFractionDigits:0 });
   const rateFmt = new Intl.NumberFormat('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
   const numberFmt = new Intl.NumberFormat('en-US', { maximumFractionDigits:0 });
+  const REVIVE_PROPOSAL_INTRO = `Thank you for the opportunity to care for your property. Revive Paver Restoration provides professional exterior restoration, cleaning, sealing, protection, and maintenance services designed for Florida properties. Your proposal below outlines the specific services recommended for your project based on the areas discussed and the condition of the surfaces.`;
   const JOBBER_API_BASE = String(window.TITUS_CONFIG?.jobberApiBase || '').replace(/\/$/, '');
   const DEVICE_TOKEN_KEY = 'revive-titus-jobber-device-token';
   const DEVICE_TOKEN_COOKIE = 'revive_titus_jobber_device';
@@ -417,6 +418,35 @@
     }
   }
 
+  async function copyProposalIntro() {
+    const status = $('proposalIntroCopyStatus');
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(REVIVE_PROPOSAL_INTRO);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = REVIVE_PROPOSAL_INTRO;
+        ta.setAttribute('readonly','');
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      status.textContent = 'Copied. Paste this into the Jobber Introduction text.';
+      $('copyProposalIntroBtn').textContent = 'Proposal Intro Copied ✓';
+      setTimeout(() => { $('copyProposalIntroBtn').textContent = 'Copy Proposal Intro'; }, 1800);
+    } catch (_) {
+      status.textContent = 'Copy was blocked by the browser. Copy the approved intro from TITUS manually.';
+    }
+  }
+
+  function showJobberBrandingStep() {
+    $('jobberBrandingCard').hidden = false;
+    $('proposalIntroCopyStatus').textContent = '';
+  }
+
   function buildJobberLines(q) {
     const lines = [];
     if (q.hasPaverBase) {
@@ -573,6 +603,8 @@
     currentJobberSelection = null;
     currentJobberQuoteUrl = '';
     $('openJobberQuoteBtn').hidden = true;
+    $('jobberBrandingCard').hidden = true;
+    $('proposalIntroCopyStatus').textContent = '';
     $('sendJobberBtn').hidden = false;
     $('sendJobberBtn').disabled = false;
     $('sendJobberBtn').textContent = 'Send to Jobber';
@@ -740,10 +772,11 @@
       $('sendJobberBtn').hidden = true;
       $('openJobberQuoteBtn').hidden = !currentJobberQuoteUrl;
       $('openJobberQuoteBtn').textContent = quote.quoteNumber ? `Open Jobber Quote #${quote.quoteNumber}` : 'Open Draft Quote in Jobber';
+      showJobberBrandingStep();
       if (quote.totalMismatch) {
         setJobberStatus(`Draft created, but Jobber totals ${money.format(quote.amounts?.total || 0)} while TITUS is ${money.format(quote.expectedTotal)}. Review tax/settings before sending.`, 'warn');
       } else {
-        setJobberStatus(`${result.duplicatePrevented ? 'Existing draft reused' : 'Draft created'}${quote.quoteNumber ? ` • Quote #${quote.quoteNumber}` : ''} using REVIVE MASTER QUOTE. Review it in Jobber before sending to the customer.`, 'good');
+        setJobberStatus(`${result.duplicatePrevented ? 'Existing draft reused' : 'Draft created'}${quote.quoteNumber ? ` • Quote #${quote.quoteNumber}` : ''} using REVIVE MASTER QUOTE. Final step: finish the Introduction branding in Jobber before sending.`, 'good');
       }
     } catch (err) {
       $('sendJobberBtn').hidden = false;
@@ -888,6 +921,7 @@
   $('closeSummaryBtn').addEventListener('click', closeSummary);
   $('doneSummaryBtn').addEventListener('click', closeSummary);
   $('copySummaryBtn').addEventListener('click', copySummary);
+  $('copyProposalIntroBtn').addEventListener('click', copyProposalIntro);
   $('sendJobberBtn').addEventListener('click', sendToJobber);
   $('openJobberQuoteBtn').addEventListener('click', openJobberQuote);
   $('applyColorJointBundleBtn').addEventListener('click', applyColorJointBundle);

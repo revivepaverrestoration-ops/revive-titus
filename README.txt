@@ -1,4 +1,4 @@
-REVIVE TITUS V1.9.0
+REVIVE TITUS V1.9.1
 Jobber matching now uses low-cost two-phase client lookup and automatic rate-limit backoff.
 
 REVIVE TITUS SALES SYSTEM - PWA V1.5.1
@@ -229,3 +229,11 @@ V1.9.0 - REVIVE MASTER QUOTE SHELL
 - Final safety confirmation explicitly shows REVIVE MASTER QUOTE before draft creation.
 - Draft only: TITUS does not send the quote to the customer.
 - No sales tax: TITUS line items remain non-taxable.
+
+
+V1.9.1 - FINISH QUOTE BRANDING
+- Adds a post-draft FINAL BRANDING STEP card in TITUS.
+- Reminds the estimator to add Jobber's Introduction section before sending.
+- Standardizes the heading as "Your Revive Proposal."
+- Adds one-tap Copy Proposal Intro using the approved Revive introduction paragraph.
+- Keeps all Jobber quote creation draft-only.

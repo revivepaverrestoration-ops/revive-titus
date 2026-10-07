@@ -1,6 +1,6 @@
-const CACHE = 'revive-titus-v1-9-0-master-quote-shell';
+const CACHE = 'revive-titus-v1-9-1-finish-quote-branding';
 const ASSETS = [
-  './', './index.html', './styles.css', './config.js?v=1.9.0', './pricing-engine.js?v=1.9.0', './app.js?v=1.9.0', './manifest.webmanifest',
+  './', './index.html', './styles.css', './config.js?v=1.9.1', './pricing-engine.js?v=1.9.1', './app.js?v=1.9.1', './manifest.webmanifest',
   './revive-logo.png', './icon-180.png', './icon-192.png', './icon-512.png'
 ];
 self.addEventListener('install', event => {
