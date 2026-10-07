@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.6 - JOBBER RATE LIMIT QA
+REVIVE TITUS V1.8.7 - SPECIALTY UPGRADE QA
 - Client scan query no longer nests properties for every client.
 - Properties are fetched only for the top matching candidates.
 - THROTTLED GraphQL responses retry automatically using Jobber throttle metadata.
@@ -192,3 +192,16 @@ V1.8.6 LIVE DESCRIPTION QA
 5. Confirm generic detail text (Flat project price / Saved Jobber service / Revive saved package) is not appended to the customer-facing description.
 6. Confirm TITUS-only lines without a saved catalog entry (Restore Bundle, Custom Border, Spot Blend / Problem Areas, Custom Revive Package) still create safely using their TITUS line name/detail and price.
 7. Check Render logs after a draft. PASS when log reports "Jobber quote catalog enrichment" with mapped description/link counts and no catalog-wide query error.
+
+
+V1.8.7 SPECIALTY UPGRADE QA
+1. Joint Tone only: 500 sq ft = $200.
+2. Color Revival only: 500 sq ft = $300.
+3. Bundle only: 500 sq ft = $400 ($0.80/sq ft).
+4. Enter Joint Tone 500 + Color Revival 500. PASS when bundle offer shows 20% savings / $100 and Switch to bundle moves 500 sq ft to the bundle and clears both separate fields.
+5. Enter Joint Tone 700 + Color Revival 500. PASS when Switch to bundle moves 500 sq ft to bundle, leaves 200 sq ft Joint Tone, and total upgrade price is $480.
+6. Accent Border Pop 10 linear ft = $395 minimum. Accent Border Pop 100 linear ft = $550.
+7. Concrete Edge Restraint 10 linear ft = $299 minimum. Concrete Edge Restraint 40 linear ft = $400.
+8. Confirm Custom Border and Designer Accent Finish no longer appear in Quote or Pricing Guide.
+9. Confirm Jobber draft names/amounts match TITUS and specialty-only fallback descriptions are customer-facing.
+10. Regression: paver minimum, exterior pricing, bundle discount, roof wash minimum, and Jobber draft creation remain unchanged.

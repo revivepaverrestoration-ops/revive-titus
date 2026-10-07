@@ -4,7 +4,7 @@
 
   const quoteIds = [
     'frontSqft','backSqft','bundleDiscount',
-    'jointToneSqft','colorRevivalSqft','restoreBundleSqft','accentBorderFlat','customBorderLf','spotBlendFlat','designerAccentFlat','metallicVeilFlat','paverRepairFlat',
+    'jointToneSqft','colorRevivalSqft','restoreBundleSqft','accentBorderLf','spotBlendFlat','metallicVeilFlat','paverRepairFlat','edgeRestraintLf',
     'houseWashSqft','houseStories','houseWashAdjustmentFlat','roofWashSqft','roofWashAdjustmentFlat',
     'drivewayCleaningSqft','sidewalkCurbSqft','frontPorchEntryFlat','concreteCleaningSealingFlat',
     'poolDeckCleaningSqft','poolCageTier','oneTimePoolClean',
@@ -89,6 +89,13 @@
     $('poolCageCalc').textContent = money.format(q.poolCagePrice);
     $('poolCleanCalc').textContent = money.format(q.oneTimePoolClean);
     $('gutterInteriorCalc').textContent = money.format(q.gutterInteriorCleaning);
+    const accentLf = Number($('accentBorderLf').value) || 0;
+    const accentPrice = accentLf > 0 ? Math.max(accentLf * RULES.accentBorderRate, RULES.accentBorderMinimum) : 0;
+    $('accentBorderCalc').textContent = money.format(accentPrice);
+    const edgeLf = Number($('edgeRestraintLf').value) || 0;
+    const edgePrice = edgeLf > 0 ? Math.max(edgeLf * RULES.edgeRestraintRate, RULES.edgeRestraintMinimum) : 0;
+    $('edgeRestraintCalc').textContent = money.format(edgePrice);
+    syncColorJointBundleOffer();
 
     $('posArea').textContent = `${numberFmt.format(q.totalArea)} sq ft`;
     $('posBase').textContent = money.format(q.paverProjectTotal);
@@ -254,21 +261,27 @@
     const jt = Number($('jointToneSqft').value) || 0;
     const cr = Number($('colorRevivalSqft').value) || 0;
     const rb = Number($('restoreBundleSqft').value) || 0;
-    const ab = Number($('accentBorderFlat').value) || 0;
-    const cb = Number($('customBorderLf').value) || 0;
+    const abLf = Number($('accentBorderLf').value) || 0;
     const sb = Number($('spotBlendFlat').value) || 0;
-    const da = Number($('designerAccentFlat').value) || 0;
     const mv = Number($('metallicVeilFlat').value) || 0;
     const pr = Number($('paverRepairFlat').value) || 0;
+    const edgeLf = Number($('edgeRestraintLf').value) || 0;
     if (jt > 0) rows.push(['Joint Tone Enhancement', `${numberFmt.format(jt)} sq ft`, jt * RULES.jointToneRate]);
     if (cr > 0) rows.push(['Color Revival', `${numberFmt.format(cr)} sq ft`, cr * RULES.colorRevivalRate]);
-    if (rb > 0) rows.push(['Restore Bundle', `${numberFmt.format(rb)} sq ft`, rb * RULES.restoreBundleRate]);
-    if (ab > 0) rows.push(['Accent Border Pop', 'Flat project price', ab]);
-    if (cb > 0) rows.push(['Custom Border', `${numberFmt.format(cb)} linear ft`, cb * RULES.customBorderRate]);
+    if (rb > 0) rows.push(['Color Revival + Joint Tone Bundle', `${numberFmt.format(rb)} sq ft • 20% bundle savings`, rb * RULES.restoreBundleRate]);
+    if (abLf > 0) {
+      const price = Math.max(abLf * RULES.accentBorderRate, RULES.accentBorderMinimum);
+      const detail = `${numberFmt.format(abLf)} linear ft${abLf * RULES.accentBorderRate < RULES.accentBorderMinimum ? ' • $395 minimum applied' : ''}`;
+      rows.push(['Accent Border Pop', detail, price]);
+    }
     if (sb > 0) rows.push(['Spot Blend / Problem Areas', 'Flat project price', sb]);
-    if (da > 0) rows.push(['Designer Accent Finish', 'Flat project price', da]);
     if (mv > 0) rows.push(['Full Metallic Veil / Metal Flake Finish', 'Flat project price', mv]);
     if (pr > 0) rows.push(['Paver Repair & Re-Leveling', 'Flat project price', pr]);
+    if (edgeLf > 0) {
+      const price = Math.max(edgeLf * RULES.edgeRestraintRate, RULES.edgeRestraintMinimum);
+      const detail = `${numberFmt.format(edgeLf)} linear ft${edgeLf * RULES.edgeRestraintRate < RULES.edgeRestraintMinimum ? ' • $299 minimum applied' : ''}`;
+      rows.push(['Concrete Edge Restraint / Paver Stabilization', detail, price]);
+    }
     return rows;
   }
 
@@ -756,6 +769,34 @@
     return String(value).replace(/[&<>'"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch]));
   }
 
+  function syncColorJointBundleOffer() {
+    const offer = $('colorJointBundleOffer');
+    if (!offer) return;
+    const jt = Number($('jointToneSqft').value) || 0;
+    const cr = Number($('colorRevivalSqft').value) || 0;
+    const overlap = Math.min(jt, cr);
+    if (overlap <= 0) {
+      offer.hidden = true;
+      return;
+    }
+    const separateRate = RULES.jointToneRate + RULES.colorRevivalRate;
+    const savings = overlap * (separateRate - RULES.restoreBundleRate);
+    $('colorJointBundleOfferText').textContent = `Bundle ${numberFmt.format(overlap)} overlapping sq ft and save ${money.format(savings)}.`;
+    offer.hidden = false;
+  }
+
+  function applyColorJointBundle() {
+    const jt = Number($('jointToneSqft').value) || 0;
+    const cr = Number($('colorRevivalSqft').value) || 0;
+    const overlap = Math.min(jt, cr);
+    if (overlap <= 0) return;
+    const existingBundle = Number($('restoreBundleSqft').value) || 0;
+    $('restoreBundleSqft').value = String(existingBundle + overlap);
+    $('jointToneSqft').value = jt - overlap > 0 ? String(jt - overlap) : '';
+    $('colorRevivalSqft').value = cr - overlap > 0 ? String(cr - overlap) : '';
+    render();
+  }
+
   function handleBundleDiscountChange() {
     const select = $('bundleDiscount');
     const requested = Number(select.value) || 0;
@@ -809,6 +850,7 @@
   $('copySummaryBtn').addEventListener('click', copySummary);
   $('sendJobberBtn').addEventListener('click', sendToJobber);
   $('openJobberQuoteBtn').addEventListener('click', openJobberQuote);
+  $('applyColorJointBundleBtn').addEventListener('click', applyColorJointBundle);
   $('quoteSummaryDialog').addEventListener('click', (event) => { if (event.target === $('quoteSummaryDialog')) closeSummary(); });
   document.querySelectorAll('.discount-btn').forEach(btn => btn.addEventListener('click', () => {
     $('bundleDiscount').value = btn.dataset.discount;
@@ -860,6 +902,6 @@
       refreshedForSW = true;
       window.location.reload();
     });
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.6').then(reg => reg.update()).catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.7').then(reg => reg.update()).catch(() => {}));
   }
 })();

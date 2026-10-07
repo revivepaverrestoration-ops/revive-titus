@@ -11,8 +11,11 @@
     paverMinimum: 1199,
     jointToneRate: 0.40,
     colorRevivalRate: 0.60,
-    restoreBundleRate: 0.90,
-    customBorderRate: 5.50,
+    restoreBundleRate: 0.80,
+    accentBorderRate: 5.50,
+    accentBorderMinimum: 395,
+    edgeRestraintRate: 10.00,
+    edgeRestraintMinimum: 299,
     standardBundleDiscountMax: 0.10,
     maxBundleDiscount: 0.20,
 
@@ -82,12 +85,11 @@
       nonneg(input.jointToneSqft) * RULES.jointToneRate +
       nonneg(input.colorRevivalSqft) * RULES.colorRevivalRate +
       nonneg(input.restoreBundleSqft) * RULES.restoreBundleRate +
-      nonneg(input.accentBorderFlat) +
-      nonneg(input.customBorderLf) * RULES.customBorderRate +
+      serviceWithMinimum(nonneg(input.accentBorderLf), RULES.accentBorderRate, RULES.accentBorderMinimum) +
       nonneg(input.spotBlendFlat) +
-      nonneg(input.designerAccentFlat) +
       nonneg(input.metallicVeilFlat) +
-      nonneg(input.paverRepairFlat);
+      nonneg(input.paverRepairFlat) +
+      serviceWithMinimum(nonneg(input.edgeRestraintLf), RULES.edgeRestraintRate, RULES.edgeRestraintMinimum);
 
     // Exterior / property services.
     const houseSqft = nonneg(input.houseWashSqft);

@@ -1,4 +1,4 @@
-REVIVE TITUS V1.8.6
+REVIVE TITUS V1.8.7
 Jobber matching now uses low-cost two-phase client lookup and automatic rate-limit backoff.
 
 REVIVE TITUS SALES SYSTEM - PWA V1.5.1
@@ -193,3 +193,14 @@ V1.8.6 - LIVE JOBBER SERVICE DESCRIPTIONS
 - Replaces internal-looking "TITUS estimate detail" copy with customer-facing "Project details" and suppresses generic notes such as "Flat project price."
 - Live descriptions are cached in the bridge process after lookup, so repeated quotes avoid unnecessary Jobber requests.
 - TITUS-only items without a saved Jobber catalog entry continue to send safely with their TITUS line name/detail and price.
+
+
+V1.8.7 - SPECIALTY UPGRADE CLEANUP
+- Renamed Restore Bundle to Color Revival + Joint Tone Bundle.
+- Bundle pricing is $0.80/sq ft, which is a true 20% savings versus buying Joint Tone ($0.40) and Color Revival ($0.60) separately.
+- When separate Joint Tone and Color Revival overlap, TITUS offers one-click conversion of the overlapping square footage to the bundle and shows the dollar savings.
+- Accent Border Pop is now $5.50/linear ft with a $395 project minimum.
+- Removed Custom Border and Designer Accent Finish from the field quote screen.
+- Kept Spot Blend / Problem Areas, Full Metallic Veil / Metal Flake Finish, and Paver Repair & Re-Leveling.
+- Added Concrete Edge Restraint / Paver Stabilization at $10/linear ft with a $299 project minimum.
+- Added customer-facing fallback descriptions for TITUS-only specialty lines that do not yet have dedicated Jobber catalog entries.

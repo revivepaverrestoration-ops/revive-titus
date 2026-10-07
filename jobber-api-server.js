@@ -671,7 +671,6 @@ const JOBBER_SERVICE_IDS = Object.freeze({
   'Color Revival': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDU=',
   'Joint Tone Enhancement / Premium Dyed Sand': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDY=',
   'Accent Border Pop': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDc=',
-  'Designer Accent Finish': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDg=',
   'Full Metallic Veil / Metal Flake Finish': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MDk=',
   'Diamond Dust Anti-Slip Treatment': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTA=',
   'Professional Concrete Cleaning & Protective Sealing': 'Z2lkOi8vSm9iYmVyL1Byb2R1Y3RPclNlcnZpY2UvNTM5MzI0MTE=',
@@ -707,6 +706,13 @@ const JOBBER_SERVICE_IDS = Object.freeze({
 // TITUS uses a few shorter field labels than the saved Jobber catalog names.
 const TITUS_JOBBER_SERVICE_ALIASES = Object.freeze({
   'Joint Tone Enhancement': 'Joint Tone Enhancement / Premium Dyed Sand'
+});
+
+const TITUS_FALLBACK_DESCRIPTIONS = Object.freeze({
+  'Color Revival + Joint Tone Bundle': 'Combined decorative upgrade that includes both Revive Color Revival and Joint Tone Enhancement / Premium Dyed Sand on the quoted area. This bundle is designed to restore richer paver color while upgrading the joint tone for a more coordinated, finished appearance. Final color and joint appearance can vary based on paver age, porosity, existing pigments, joint width, lighting, previous coatings, and the selected sealer finish.',
+  'Spot Blend / Problem Areas': 'Targeted decorative blending for approved isolated areas where color, wear, staining, or visual inconsistency needs additional attention beyond the standard restoration scope. Exact treatment is based on the affected area and existing paver condition. Final appearance can vary and perfect uniformity cannot be guaranteed.',
+  'Concrete Edge Restraint / Paver Stabilization': 'Install a concrete edge restraint along approved exposed paver edges to help support border pavers, reduce lateral movement, and improve edge stability. Service includes accessible edge preparation, placement and shaping of the concrete restraint, and cleanup of the quoted area. Base reconstruction, drainage correction, root removal, broken paver replacement, and structural repairs are included only when specifically listed in the written scope.',
+  'Custom Revive Package': 'Custom exterior service package built for the quoted property. Included work areas, preparation, exclusions, and project-specific pricing are documented in the quote scope.'
 });
 
 const catalogItemCache = new Map();
@@ -796,7 +802,7 @@ async function createJobberQuote({ clientId, propertyId, title, lines, expectedT
     const item = catalogByTitusName.get(normalizeName(line.name));
     const payload = {};
     if (lineFields.has('name')) payload.name = item?.name || line.name;
-    if (lineFields.has('description')) payload.description = appendProjectDetail(item?.description || '', line.detail);
+    if (lineFields.has('description')) payload.description = appendProjectDetail(item?.description || TITUS_FALLBACK_DESCRIPTIONS[line.name] || '', line.detail);
     if (lineFields.has('quantity')) payload.quantity = 1;
     if (lineFields.has('unitPrice')) payload.unitPrice = Number(line.amount.toFixed(2));
     if (lineFields.has('taxable')) payload.taxable = item?.taxable ?? true;

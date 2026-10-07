@@ -26,7 +26,7 @@
       </div>
       <div class="status-wrap">
         <span id="connectionBadge" class="status-badge">Checking connection...</span>
-        <span class="version">V1.8.6</span>
+        <span class="version">V1.8.7</span>
       </div>
     </header>
 
@@ -124,15 +124,15 @@
                 <p>Leave an upgrade blank when it does not apply.</p>
               </div>
               <div class="upgrade-list">
-                <label class="upgrade-row"><span><b>Joint tone enhancement</b><small>Default +$0.40 / sq ft</small></span><div class="mini-input"><input id="jointToneSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
-                <label class="upgrade-row"><span><b>Color revival</b><small>Default +$0.60 / sq ft</small></span><div class="mini-input"><input id="colorRevivalSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
-                <label class="upgrade-row"><span><b>Restore bundle</b><small>Default +$0.90 / sq ft</small></span><div class="mini-input"><input id="restoreBundleSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
-                <label class="upgrade-row"><span><b>Accent border pop</b><small>Typical $295–$695</small></span><div class="mini-input currency"><span>$</span><input id="accentBorderFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
-                <label class="upgrade-row"><span><b>Custom border</b><small>Default $5.50 / linear ft</small></span><div class="mini-input"><input id="customBorderLf" type="number" inputmode="decimal" min="0" step="1"><span>linear ft</span></div></label>
+                <label class="upgrade-row"><span><b>Joint tone enhancement / premium dyed sand</b><small>+$0.40 / sq ft</small></span><div class="mini-input"><input id="jointToneSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
+                <label class="upgrade-row"><span><b>Color revival</b><small>+$0.60 / sq ft</small></span><div class="mini-input"><input id="colorRevivalSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
+                <div id="colorJointBundleOffer" class="bundle-offer" hidden><div><b>Bundle available — save 20%</b><small id="colorJointBundleOfferText">Combine Color Revival + Joint Tone on the overlapping area.</small></div><button id="applyColorJointBundleBtn" class="bundle-offer-btn" type="button">Switch to bundle</button></div>
+                <label class="upgrade-row"><span><b>Color Revival + Joint Tone Bundle</b><small>+$0.80 / sq ft • 20% savings vs. separate upgrades</small></span><div class="mini-input"><input id="restoreBundleSqft" type="number" inputmode="decimal" min="0" step="1"><span>sq ft</span></div></label>
+                <label class="upgrade-row"><span><b>Accent border pop</b><small>$5.50 / linear ft • $395 minimum</small></span><div class="upgrade-calc-controls"><div class="mini-input"><input id="accentBorderLf" type="number" inputmode="decimal" min="0" step="1"><span>linear ft</span></div><strong id="accentBorderCalc" class="service-price">$0</strong></div></label>
                 <label class="upgrade-row"><span><b>Spot blend / problem areas</b><small>Typical $150–$350</small></span><div class="mini-input currency"><span>$</span><input id="spotBlendFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
-                <label class="upgrade-row"><span><b>Designer accent finish</b><small>Typical $350–$750</small></span><div class="mini-input currency"><span>$</span><input id="designerAccentFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
-                <label class="upgrade-row"><span><b>Full metallic veil</b><small>Typical $750–$1,500</small></span><div class="mini-input currency"><span>$</span><input id="metallicVeilFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
-                <label class="upgrade-row"><span><b>Paver repair</b><small>Enter quoted flat project price</small></span><div class="mini-input currency"><span>$</span><input id="paverRepairFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
+                <label class="upgrade-row"><span><b>Full metallic veil / metal flake finish</b><small>Typical $750–$1,500</small></span><div class="mini-input currency"><span>$</span><input id="metallicVeilFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
+                <label class="upgrade-row"><span><b>Paver repair & re-leveling</b><small>Enter approved flat project price</small></span><div class="mini-input currency"><span>$</span><input id="paverRepairFlat" type="number" inputmode="decimal" min="0" step="1"></div></label>
+                <label class="upgrade-row"><span><b>Concrete edge restraint / paver stabilization</b><small>$10 / linear ft • $299 minimum</small></span><div class="upgrade-calc-controls"><div class="mini-input"><input id="edgeRestraintLf" type="number" inputmode="decimal" min="0" step="1"><span>linear ft</span></div><strong id="edgeRestraintCalc" class="service-price">$0</strong></div></label>
               </div>
             </section>
 
@@ -287,15 +287,14 @@
           <section class="panel compact">
             <div class="panel-heading"><div><span class="step">02</span><h2>Paver specialty upgrades</h2></div></div>
             <div class="reference-list two-col">
-              <div><span>Joint tone enhancement</span><strong>+$0.35–$0.50/sq ft</strong><small>Calculator default: $0.40/sq ft</small></div>
-              <div><span>Color revival</span><strong>+$0.45–$0.75/sq ft</strong><small>Calculator default: $0.60/sq ft</small></div>
-              <div><span>Restore bundle</span><strong>+$0.75–$1.10/sq ft</strong><small>Calculator default: $0.90/sq ft</small></div>
-              <div><span>Accent border pop</span><strong>$295–$695</strong><small>Flat project price</small></div>
-              <div><span>Custom border</span><strong>$4–$7 / linear ft</strong><small>Calculator default: $5.50 / linear ft</small></div>
-              <div><span>Spot blend / problem areas</span><strong>$150–$350</strong><small>Flat project price</small></div>
-              <div><span>Designer accent finish</span><strong>$350–$750</strong><small>Flat project price</small></div>
-              <div><span>Full metallic veil</span><strong>+$750–$1,500</strong><small>Designer fee</small></div>
-              <div><span>Paver repair</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+              <div><span>Joint tone enhancement / premium dyed sand</span><strong>+$0.40/sq ft</strong><small>Upgrade joint color and finished appearance</small></div>
+              <div><span>Color revival</span><strong>+$0.60/sq ft</strong><small>Decorative color restoration</small></div>
+              <div><span>Color Revival + Joint Tone Bundle</span><strong>+$0.80/sq ft</strong><small>20% savings vs. buying both separately</small></div>
+              <div><span>Accent border pop</span><strong>$5.50 / linear ft</strong><small>$395 project minimum</small></div>
+              <div><span>Spot blend / problem areas</span><strong>$150–$350</strong><small>Approved flat project price</small></div>
+              <div><span>Full metallic veil / metal flake finish</span><strong>+$750–$1,500</strong><small>Premium decorative finish</small></div>
+              <div><span>Paver repair & re-leveling</span><strong>Custom</strong><small>Enter approved flat project price</small></div>
+              <div><span>Concrete edge restraint / paver stabilization</span><strong>$10 / linear ft</strong><small>$299 project minimum</small></div>
             </div>
           </section>
         </div>
@@ -477,8 +476,8 @@
       <button class="nav-btn customer-nav-btn" data-screen="customer" type="button"><span class="nav-icon">★</span><span id="customerNavLabel">Customer</span></button>
     </nav>
   </div>
-  <script src="config.js?v=1.8.6"></script>
-  <script src="pricing-engine.js?v=1.8.6"></script>
-  <script src="app.js?v=1.8.6"></script>
+  <script src="config.js?v=1.8.7"></script>
+  <script src="pricing-engine.js?v=1.8.7"></script>
+  <script src="app.js?v=1.8.7"></script>
 </body>
 </html>

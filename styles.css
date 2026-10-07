@@ -363,3 +363,14 @@ dl .line { border-top: 1px solid var(--line); color: white; }
 .jobber-choice-btn small { color:var(--muted); margin-top:3px; }
 .jobber-choice-btn:active { transform:translateY(1px); }
 @media (max-width:620px) { .jobber-send-head { align-items:center; } }
+
+
+/* TITUS V1.8.7 - specialty upgrade simplification */
+.upgrade-calc-controls { display:flex; align-items:center; justify-content:flex-end; gap:9px; flex-wrap:wrap; }
+.bundle-offer { display:flex; align-items:center; justify-content:space-between; gap:14px; border:1px solid rgba(66,211,146,.38); background:rgba(66,211,146,.09); border-radius:15px; padding:13px 14px; }
+.bundle-offer[hidden] { display:none !important; }
+.bundle-offer b { display:block; color:#bcf7db; font-size:14px; }
+.bundle-offer small { display:block; color:var(--muted); margin-top:3px; }
+.bundle-offer-btn { min-height:42px; border:1px solid rgba(66,211,146,.48); background:rgba(66,211,146,.16); color:#e9fff5; border-radius:12px; padding:8px 13px; font-weight:900; cursor:pointer; white-space:nowrap; }
+.bundle-offer-btn:focus-visible { outline:3px solid rgba(66,211,146,.20); outline-offset:2px; }
+@media (max-width:700px) { .bundle-offer { align-items:flex-start; flex-direction:column; } .bundle-offer-btn { width:100%; } .upgrade-calc-controls { width:100%; } }
