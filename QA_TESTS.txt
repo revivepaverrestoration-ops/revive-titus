@@ -169,3 +169,10 @@ V1.8.1 PAIRING RELIABILITY CHECKS
 - localStorage, sessionStorage, and a secure first-party cookie are attempted for 180-day device persistence.
 - Incorrect PIN surfaces the exact BAD_PIN message.
 - Backend pairing logs never include the PIN or full bearer token.
+
+
+V1.8.2 JOBBER PAIRING CONTINUATION CHECKS
+- Pair endpoint token is passed directly into status request after PIN acceptance.
+- Same token is passed directly into connect-url request for the initial OAuth redirect.
+- Browser storage is still used for future sessions but is no longer required to continue the first setup flow.
+- Versioned app.js/config.js/pricing-engine.js URLs prevent stale service-worker asset mixing.

@@ -484,10 +484,10 @@
     return persisted;
   }
 
-  async function jobberFetch(path, options = {}, allowPair = true) {
+  async function jobberFetch(path, options = {}, allowPair = true, tokenOverride = '') {
     if (!JOBBER_API_BASE) throw new Error('The TITUS Jobber bridge URL is not configured.');
     const headers = { 'Content-Type':'application/json', ...(options.headers || {}) };
-    const token = jobberDeviceToken();
+    const token = String(tokenOverride || jobberDeviceToken() || '').trim();
     if (token) headers.Authorization = `Bearer ${token}`;
     let response;
     try {
@@ -498,19 +498,20 @@
     let body = {};
     try { body = await response.json(); } catch (_) {}
     if (response.status === 401 && body.code === 'PAIR_REQUIRED' && allowPair) {
-      const paired = await pairJobberDevice();
-      if (!paired) throw new Error('This iPad must be paired before it can send quotes to Jobber.');
-      return jobberFetch(path, options, false);
+      const pairedToken = await pairJobberDevice();
+      if (!pairedToken) throw new Error('Device pairing was cancelled. Tap Send to Jobber and enter the setup PIN.');
+      return jobberFetch(path, options, false, pairedToken);
     }
     if (!response.ok || body.ok === false) throw new Error(body.message || `Jobber bridge returned HTTP ${response.status}.`);
     return body;
   }
 
   async function pairJobberDevice() {
-    const pin = window.prompt('Enter the TITUS setup PIN for this iPad. You only need to do this once.');
-    if (!pin) return false;
+    const pin = window.prompt('Enter the TITUS setup PIN for this device. You only need to do this once.');
+    if (!pin) return '';
     if (!JOBBER_API_BASE) throw new Error('The TITUS Jobber bridge URL is not configured.');
 
+    setJobberStatus('Checking the TITUS setup PIN…', 'muted');
     let response;
     try {
       response = await fetch(`${JOBBER_API_BASE}/api/pair`, {
@@ -519,7 +520,7 @@
         body:JSON.stringify({ pin: String(pin).trim() })
       });
     } catch (_) {
-      throw new Error('Could not reach the TITUS Jobber bridge. Check the iPad internet connection and try again.');
+      throw new Error("Could not reach the TITUS Jobber bridge. Check this device's internet connection and try again.");
     }
 
     const body = await response.json().catch(() => ({}));
@@ -537,19 +538,19 @@
         headers:{ 'Content-Type':'application/json', Authorization:`Bearer ${token}` }
       });
     } catch (_) {
-      throw new Error('The PIN was accepted, but TITUS could not verify this iPad with the Jobber bridge. Try again once.');
+      throw new Error('The PIN was accepted, but TITUS could not verify this device with the Jobber bridge. Try again once.');
     }
     const verifyBody = await verifyResponse.json().catch(() => ({}));
     if (!verifyResponse.ok) {
-      throw new Error(verifyBody.message || 'The PIN was accepted, but the bridge did not recognize this iPad.');
+      throw new Error(verifyBody.message || 'The PIN was accepted, but the bridge did not recognize this device.');
     }
 
     if (!persisted) {
-      setJobberStatus('This iPad is paired for this session. Safari storage is restricted, so the setup PIN may be required again after closing TITUS.', 'warn');
+      setJobberStatus('Pairing accepted for this session. Continuing to Jobber…', 'warn');
     } else {
-      setJobberStatus('This iPad is paired. Connecting to Jobber…', 'good');
+      setJobberStatus('Pairing accepted. Continuing to Jobber…', 'good');
     }
-    return true;
+    return token;
   }
 
   function setJobberStatus(message, tone = '') {
@@ -576,11 +577,11 @@
 
   async function refreshJobberStatus() {
     if (!navigator.onLine) {
-      setJobberStatus('Offline. Build the estimate now and send it to Jobber when this iPad is back online.', 'warn');
+      setJobberStatus('Offline. Build the estimate now and send it to Jobber when this device is back online.', 'warn');
       return;
     }
     if (!jobberDeviceToken()) {
-      setJobberStatus('Jobber is ready for setup. Tap Send to Jobber to pair this iPad.', 'muted');
+      setJobberStatus('Jobber is ready for setup. Tap Send to Jobber to pair this device.', 'muted');
       return;
     }
     try {
@@ -588,20 +589,40 @@
       if (status.connected) setJobberStatus(`Connected to Jobber${status.account?.name ? ` • ${status.account.name}` : ''}.`, 'good');
       else setJobberStatus('Jobber authorization is required. Tap Send to Jobber to connect.', 'warn');
     } catch (err) {
-      if (/paired/i.test(err.message)) setJobberStatus('Tap Send to Jobber to pair this iPad.', 'muted');
+      if (/paired/i.test(err.message)) setJobberStatus('Tap Send to Jobber to pair this device.', 'muted');
       else setJobberStatus(err.message, 'warn');
     }
   }
 
   async function ensureJobberConnection() {
-    const status = await jobberFetch('/api/jobber/status', { method:'GET' });
+    let token = String(jobberDeviceToken() || '').trim();
+    if (!token) {
+      token = await pairJobberDevice();
+      if (!token) return false;
+    }
+
+    let status;
+    try {
+      status = await jobberFetch('/api/jobber/status', { method:'GET' }, false, token);
+    } catch (err) {
+      if (/pair|expired|missing/i.test(err.message || '')) {
+        token = await pairJobberDevice();
+        if (!token) return false;
+        status = await jobberFetch('/api/jobber/status', { method:'GET' }, false, token);
+      } else {
+        throw err;
+      }
+    }
+
     if (status.connected) return true;
+
+    setJobberStatus('Device paired. Opening Jobber authorization…', 'good');
     const auth = await jobberFetch('/api/jobber/connect-url', {
       method:'POST',
       body:JSON.stringify({ returnTo: `${window.location.origin}${window.location.pathname}` })
-    });
+    }, false, token);
     if (!auth.url) throw new Error('Jobber did not return an authorization link.');
-    window.location.assign(auth.url);
+    window.location.href = auth.url;
     return false;
   }
 
@@ -683,7 +704,7 @@
     const q = calculate();
     resetJobberResult();
     if (!navigator.onLine) {
-      setJobberStatus('This iPad is offline. TITUS can keep estimating, but Jobber requires internet.', 'warn');
+      setJobberStatus('This device is offline. TITUS can keep estimating, but Jobber requires internet.', 'warn');
       return;
     }
     if (q.finalPrice <= 0 || !buildJobberLines(q).length) {
@@ -831,6 +852,6 @@
       refreshedForSW = true;
       window.location.reload();
     });
-    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').then(reg => reg.update()).catch(() => {}));
+    window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js?v=1.8.2').then(reg => reg.update()).catch(() => {}));
   }
 })();
